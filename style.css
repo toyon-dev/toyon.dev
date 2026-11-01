@@ -242,13 +242,6 @@ pre {
 
 
 
-.specimen figcaption {
-  font-style: italic;
-  color: var(--ink-2);
-  font-size: 0.9rem;
-  text-align: right;
-  margin-top: 0.25rem;
-}
 
 /* Sections */
 
@@ -447,10 +440,6 @@ footer a:hover {
     order: -1;
     justify-self: start;
     width: 11rem;
-  }
-
-  .specimen figcaption {
-    text-align: left;
   }
 
   .steps ul,
