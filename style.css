@@ -1,0 +1,475 @@
+/* Brand only. The shell keeps its own theme (shared/src/themes.ts); this is the
+   cousin of Toyon Light that VOICE.md describes, on Toyon Light's own paper:
+   sage leaves, and the berry as the one saturated thing on the page. */
+
+@font-face {
+  font-family: "Newsreader";
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url("fonts/newsreader-latin-opsz-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Newsreader";
+  font-style: italic;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url("fonts/newsreader-latin-opsz-italic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Toyon Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/toyon-mono-regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Toyon Mono";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("fonts/toyon-mono-medium.woff2") format("woff2");
+}
+
+:root {
+  color-scheme: light;
+
+  --paper: #f8f2e8; /* Toyon Light's paper, so the site and the shell share a ground */
+  --berry: #a83229;
+  --sage: #5c6b52;
+  /* Inks and surfaces are Toyon Light's own (shared/src/themes.ts), so the page
+     and the app read as one family: brown on paper, never grey on cream. */
+  --ink: #463627;
+  --ink-2: #6e5e51;
+  --rule: #dfd7c9;
+  --line: rgb(70 54 39 / 0.4);
+  --code-bg: #efe8dc;
+
+  --face-display: "Newsreader", Georgia, "Times New Roman", serif;
+  --face-ui: -apple-system, "Segoe UI", sans-serif;
+  --face-mono: "Toyon Mono", ui-monospace, "SF Mono", Menlo, "DejaVu Sans Mono", monospace;
+
+  /* Three widths and no others. The column holds everything and sets the one
+     left edge; the measure caps prose inside it; the wide width is for the
+     screenshot alone. */
+  --col: 56rem;
+  --col-wide: 78rem;
+  --measure: 42rem;
+  --gutter: clamp(1.25rem, 5vw, 3rem);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--face-display);
+  font-size: 112.5%;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  font-optical-sizing: auto;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0 var(--gutter);
+}
+
+a {
+  color: inherit;
+  text-decoration-color: var(--rule);
+  text-underline-offset: 0.16em;
+}
+
+a:hover {
+  text-decoration-color: var(--berry);
+}
+
+::selection {
+  background: rgb(168 50 41 / 0.22);
+}
+
+:focus-visible {
+  outline: 2px solid var(--berry);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+h1,
+h2 {
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  margin: 0;
+}
+
+h2 {
+  font-size: 1.75rem;
+  line-height: 1.2;
+  margin-bottom: 1.25rem;
+}
+
+p {
+  margin: 0 0 1rem;
+}
+
+code,
+pre {
+  font-family: var(--face-mono);
+  font-size: 0.78em;
+}
+
+:not(pre) > code {
+  background: var(--code-bg);
+  border-radius: 3px;
+  padding: 0.1em 0.35em;
+}
+
+pre {
+  margin: 0;
+  padding: 1rem 1.25rem;
+  background: var(--code-bg);
+  border-radius: 4px;
+  line-height: 1.6;
+  overflow-x: auto;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Nav */
+
+.nav {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.5rem;
+  max-width: var(--col);
+  margin: 0 auto;
+  padding: 1.5rem 0;
+}
+
+.wordmark {
+  font-size: 1.5rem;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.nav ul {
+  display: flex;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--face-ui);
+  font-size: 0.8rem;
+}
+
+.nav ul a {
+  text-decoration: none;
+}
+
+.nav ul a:hover {
+  color: var(--berry);
+}
+
+/* Hero: text to the left, the specimen in the right margin. */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, var(--measure)) minmax(14rem, 1fr);
+  gap: 3rem var(--gutter);
+  align-items: center;
+  max-width: var(--col);
+  margin: 7rem auto 0;
+}
+
+.hero > div:first-child {
+  container-type: inline-size;
+}
+
+.hero h1 {
+  font-size: clamp(2rem, 1.2rem + 2.4vw, 2.75rem);
+  line-height: 1.12;
+  margin-bottom: 2.25rem;
+}
+
+/* Two set lines. Above phone width neither wraps, and the size follows the
+   column so the longer first line always fits it. Phones wrap freely. */
+.hero h1 .line {
+  display: block;
+}
+
+@media (min-width: 40rem) {
+  .hero h1 {
+    font-size: min(clamp(2rem, 1.2rem + 2.4vw, 2.75rem), 6.6cqi);
+    white-space: nowrap;
+  }
+}
+
+.start {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  font-family: var(--face-ui);
+  font-size: 0.85rem;
+}
+
+.start pre {
+  padding: 0.55rem 1rem;
+  font-size: 0.9rem;
+}
+
+.specimen {
+  margin: 0;
+  justify-self: end;
+  width: min(100%, 16rem);
+}
+
+
+
+.specimen figcaption {
+  font-style: italic;
+  color: var(--ink-2);
+  font-size: 0.9rem;
+  text-align: right;
+  margin-top: 0.25rem;
+}
+
+/* Sections */
+
+/* One left edge. Every section spans the column; prose inside it stops at the
+   measure but starts where everything else starts. */
+
+section {
+  max-width: var(--col);
+  margin: 0 auto;
+  padding: 7rem 0 0;
+}
+
+/* The one thing allowed past the column: the screenshot runs wider. */
+.window {
+  max-width: var(--col-wide);
+  padding-top: 5rem;
+}
+
+.window figure,
+.steps figure {
+  margin: 0;
+}
+
+.window img,
+.steps img,
+.steps video {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  border: 1px solid var(--rule);
+  background: #32302d;
+}
+
+/* An empty picture slot, until the capture exists. */
+.slot {
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+}
+
+.slot-window {
+  aspect-ratio: 1400 / 876;
+}
+
+.slot-step {
+  aspect-ratio: 3 / 2;
+}
+
+.slot-plate {
+  aspect-ratio: 320 / 440;
+}
+
+
+/* How it works: the heading on the page column, the three pictured items on
+   the wide one, picture above, title and caption below. */
+
+.steps {
+  max-width: var(--col-wide);
+}
+
+.steps h2 {
+  margin-left: max(0px, calc((100% - var(--col)) / 2));
+}
+
+.steps ul {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem var(--gutter);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.steps li {
+  display: grid;
+  gap: 0;
+}
+
+.steps h3 {
+  font-size: 1.4rem;
+  font-weight: 400;
+  line-height: 1.2;
+  margin: 1rem 0 0.35rem;
+}
+
+.steps p {
+  font-family: var(--face-ui);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+/* Local and off the laptop, side by side. */
+
+.run {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem var(--gutter);
+  align-items: start;
+}
+
+.run pre {
+  margin-bottom: 1rem;
+}
+
+/* Both columns in the same small sans, so they sit at a similar height. */
+.run p {
+  font-family: var(--face-ui);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+/* Impressum and Datenschutz: short prose pages in the reading face. */
+
+.legal {
+  max-width: var(--col);
+  margin: 3rem auto 0;
+}
+
+/* Headings in the reading face, the text itself in the sans. */
+.legal p {
+  max-width: var(--measure);
+  font-family: var(--face-ui);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+.legal h1 + p {
+  color: var(--ink-2);
+  opacity: 0.85;
+  margin-bottom: 2.5rem;
+}
+
+.legal h1 {
+  font-size: 2rem;
+  line-height: 1.15;
+  margin-bottom: 1.5rem;
+}
+
+.legal h2 {
+  font-size: 1.25rem;
+  margin: 2rem 0 0.5rem;
+}
+
+/* Footer */
+
+footer {
+  max-width: var(--col);
+  margin: 7rem auto 0;
+  padding: 1.5rem 0 2.5rem;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  font-family: var(--face-ui);
+  font-size: 0.8rem;
+  color: var(--ink-2);
+}
+
+footer p {
+  margin: 0;
+}
+
+footer ul {
+  display: flex;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+footer a {
+  text-decoration: none;
+}
+
+footer a:hover {
+  color: var(--berry);
+}
+
+/* Phones */
+
+@media (max-width: 40rem) {
+  html {
+    font-size: 100%;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+    margin-top: 3rem;
+  }
+
+  .specimen {
+    order: -1;
+    justify-self: start;
+    width: 11rem;
+  }
+
+  .specimen figcaption {
+    text-align: left;
+  }
+
+  .steps ul,
+  .run {
+    grid-template-columns: 1fr;
+  }
+
+  /* Title and caption first on a phone, the picture under them. */
+  .steps li figure {
+    order: 1;
+    margin-top: 1rem;
+  }
+
+  .steps h3 {
+    margin-top: 0;
+  }
+
+  section {
+    padding-top: 4.5rem;
+  }
+}
+

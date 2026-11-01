@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Toyon</title>
+  <meta name="description" content="Toyon is where coding agents work on your web app while you check each change by using it. Every chat gets its own running copy with a live preview.">
+  <meta name="theme-color" content="#f8f2e8">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://toyon.dev/">
+  <meta property="og:title" content="Toyon">
+  <meta property="og:description" content="Toyon is where coding agents work on your web app while you check each change by using it. Every chat gets its own running copy with a live preview.">
+  <meta property="og:image" content="https://toyon.dev/toyon.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="preload" href="fonts/newsreader-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav class="nav" aria-label="Site">
+    <a class="wordmark" href="/">toyon</a>
+    <ul>
+      <li><a href="#install">Install</a></li>
+      <li><a href="#how-it-works">How it works</a></li>
+      <li><a href="https://github.com/toyon-dev/toyon">GitHub</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <div>
+        <h1><span class="line">Ask for changes to your web app</span> <span class="line">&amp; try them as they happen.</span></h1>
+        <div class="start">
+          <pre><code>npx toyon</code></pre>
+          <a href="#install">Install and requirements</a>
+        </div>
+      </div>
+      <figure class="specimen">
+        <!-- The drawn specimen goes here (VOICE.md, "The look"): one true toyon branch, line work with the berries the only colour. -->
+        <div class="slot slot-plate" aria-hidden="true"></div>
+        <figcaption>Heteromeles arbutifolia</figcaption>
+      </figure>
+    </header>
+
+    <section class="window" aria-label="Toyon in use">
+      <figure class="slot slot-window" aria-hidden="true"></figure>
+    </section>
+
+    <section id="install" class="run">
+      <div>
+        <h2>On your machine</h2>
+        <pre><code>cd your-project
+npx toyon</code></pre>
+        <p class="note">macOS and Linux. Needs Node 18 or newer and an account for the agent you pick; the <a href="https://github.com/toyon-dev/toyon#install">README</a> has the rest.</p>
+      </div>
+      <div>
+        <h2>On your own server</h2>
+        <p>Keep it running when your laptop is closed: deploy it to your own Fly account, or run it on a box of your own behind Tailscale and open it from your phone. Your code and keys never pass through a Toyon server.</p>
+        <p class="note"><a href="https://github.com/toyon-dev/toyon/blob/main/docs/remote.md">How to set it up</a></p>
+      </div>
+    </section>
+
+    <section id="how-it-works" class="steps">
+      <h2>How it works</h2>
+      <ul>
+        <li>
+          <figure class="slot slot-step" aria-hidden="true"></figure>
+          <div>
+            <h3>Ask, and watch it change</h3>
+            <p>Say what you want, or point at the thing on the page. The app updates while the agent works; steer it mid-way, or fix the small thing yourself.</p>
+          </div>
+        </li>
+        <li>
+          <figure class="slot slot-step" aria-hidden="true"></figure>
+          <div>
+            <h3>Know where every chat stands</h3>
+            <p>Every chat gets its own copy of your project with the app running. The list says which ones are working, which are waiting on you, and what each one changed.</p>
+          </div>
+        </li>
+        <li>
+          <figure class="slot slot-step" aria-hidden="true"></figure>
+          <div>
+            <h3>From your phone</h3>
+            <p>Pair your phone from the top bar. Start a chat from it, steer one that is running, or check the copy on a real phone screen.</p>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>MIT licensed, no account, no telemetry.</p>
+    <ul>
+      <li><a href="impressum.html">Impressum</a></li>
+      <li><a href="datenschutz.html">Datenschutz</a></li>
+    </ul>
+  </footer>
+</body>
+</html>
