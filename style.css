@@ -201,23 +201,17 @@ pre {
   container-type: inline-size;
 }
 
+/* Two set lines that never wrap. The size follows the column so the longer
+   first line always fits it, phones included. */
 .hero h1 {
-  font-size: clamp(2rem, 1.2rem + 2.4vw, 2.75rem);
+  font-size: min(clamp(2rem, 1.2rem + 2.4vw, 2.75rem), 6.6cqi);
   line-height: 1.12;
   margin-bottom: 2.25rem;
+  white-space: nowrap;
 }
 
-/* Two set lines. Above phone width neither wraps, and the size follows the
-   column so the longer first line always fits it. Phones wrap freely. */
 .hero h1 .line {
   display: block;
-}
-
-@media (min-width: 40rem) {
-  .hero h1 {
-    font-size: min(clamp(2rem, 1.2rem + 2.4vw, 2.75rem), 6.6cqi);
-    white-space: nowrap;
-  }
 }
 
 .start {
@@ -453,7 +447,14 @@ footer a:hover {
     margin-top: 1rem;
   }
 
+  /* The headline fits its column, about 21-25px here, so the section
+     titles step down to stay under it. */
+  h2 {
+    font-size: 1.2rem;
+  }
+
   .steps h3 {
+    font-size: 1.1rem;
     margin-top: 0;
   }
 
