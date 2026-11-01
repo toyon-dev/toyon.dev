@@ -1,0 +1,8 @@
+{
+  "run": {
+    "web": "bunx serve -l $PORT ."
+  },
+  "land": {
+    "route": "merge"
+  }
+}
