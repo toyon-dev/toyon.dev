@@ -203,12 +203,12 @@ pre {
   }
 }
 
-/* The one link off the page is the GitHub mark, kept small and in the second ink so it is a
-   footnote to the wordmark, not its counterweight; the berry comes only under the pointer. */
+/* The one link off the page is the GitHub mark, kept small and at the rule's weight so it only
+   hints that it is there; under the pointer it firms up to the second ink, never the berry. */
 .nav .github {
   align-self: center;
   display: block;
-  color: var(--ink-2);
+  color: var(--line);
 }
 
 .nav .github svg {
@@ -219,7 +219,7 @@ pre {
 }
 
 .nav .github:hover {
-  color: var(--berry);
+  color: var(--ink-2);
 }
 
 /* Hero: text to the left, the specimen in the right margin. */
