@@ -168,6 +168,41 @@ pre {
   text-decoration: none;
 }
 
+/* Under the pointer, the app's live-text sweep (shell styles/base.css) in the berry instead of
+   the text's lit tier: the one saturated thing on the page passes through the name for as long
+   as the pointer stays. The band is clipped to the glyphs. The gradient is twice the word wide
+   with the band across its middle fifth, so nearly the whole travel from 150% to -50% is the
+   band crossing the letters, and at both ends only the ink shows, so the loop has no seam. At
+   rest the name is plain ink. */
+.wordmark:hover {
+  background: linear-gradient(110deg, var(--ink) 30%, var(--berry) 40%, var(--berry) 60%, var(--ink) 70%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  /* 1.1s a pass, which is the app's own pace once the shorter travel here is allowed for */
+  animation: wordmark-sweep 1.1s linear infinite;
+}
+
+@keyframes wordmark-sweep {
+  from {
+    background-position: 150% 0;
+  }
+  to {
+    background-position: -50% 0;
+  }
+}
+
+/* a sweep modulates the contrast of the word being read; held still, the hover is the berry
+   outright, as the nav's links are */
+@media (prefers-reduced-motion: reduce) {
+  .wordmark:hover {
+    background: none;
+    -webkit-text-fill-color: var(--berry);
+    animation: none;
+  }
+}
+
 .nav ul {
   display: flex;
   gap: 1.5rem;
@@ -212,6 +247,30 @@ pre {
 
 .hero h1 .line {
   display: block;
+}
+
+/* The page's one entrance: the berry passes through the headline once, just after the fonts
+   have landed, and the words are ink from then on. The sweep is the wordmark's (above), clipped
+   to the glyphs; the animation fills both ways, so before it starts and after it ends the ink
+   end of the gradient is what shows. Once, never again: a repeat would read as loading. */
+.hero h1 {
+  /* leaned twenty degrees so the band reaches the first line before the second: one pass
+     through the block, in reading order, not two lines lit in step */
+  background: linear-gradient(110deg, var(--ink) 30%, var(--berry) 40%, var(--berry) 60%, var(--ink) 70%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  /* slower than the app's pace: a band this wide at that pace reads as a flash, not a pass */
+  animation: wordmark-sweep 1.6s linear 0.5s 1 both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero h1 {
+    background: none;
+    -webkit-text-fill-color: currentColor;
+    animation: none;
+  }
 }
 
 .start {
