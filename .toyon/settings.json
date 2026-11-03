@@ -1,4 +1,5 @@
 {
+  "setup": ["bun install"],
   "run": {
     "web": "bun build.ts --serve"
   },

@@ -1,0 +1,8 @@
+{
+  "name": "toyon.dev",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "marked": "^18.1.3"
+  }
+}
