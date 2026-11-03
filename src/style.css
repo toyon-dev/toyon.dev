@@ -2,7 +2,7 @@
    cousin of Toyon Light that VOICE.md describes, on Toyon Light's own paper:
    sage leaves, and the berry as the one saturated thing on the page.
 
-   The site has two grounds and no toggle. The brand pages (the landing page, Impressum,
+   The site has two grounds and no toggle. The brand pages (the landing page and
    Datenschutz) are the paper; the docs are read beside the app, which boots into Toyon Dark,
    so they take that theme's ground and inks instead (`.dark`, below). build.ts sets the class
    on <html> per page. */
@@ -100,7 +100,7 @@ html {
 }
 
 /* The page is at least the window tall, and the footer sits at its foot: on a short page (the
-   Impressum, a one-screen doc) it rests at the bottom edge instead of floating mid-screen. */
+   Datenschutz, a one-screen doc) it rests at the bottom edge instead of floating mid-screen. */
 body {
   display: flex;
   flex-direction: column;
@@ -469,7 +469,7 @@ section {
   color: var(--ink-2);
 }
 
-/* Prose pages: Impressum, Datenschutz and the docs. Headings in the reading face, the text
+/* Prose pages: Datenschutz and the docs. Headings in the reading face, the text
    itself in the sans, held to the measure. */
 
 /* The title sits about where the landing page's headline does on a laptop screen, so the step
