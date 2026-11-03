@@ -266,7 +266,7 @@ footer a:hover {
   color: var(--ink-2);
 }
 
-/* Hero: text to the left, the specimen in the right margin. */
+/* Hero: the headline, its line and the way in, on the column's left edge at the measure. */
 
 /* The hero fills the top of the screen down to where the screenshot starts, at about three
    fifths of the viewport, so the window's top edge shows above the fold and says there is more.
@@ -274,9 +274,7 @@ footer a:hover {
    the middle of what is left, and never closer than 5rem to either. */
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, var(--measure)) minmax(14rem, 1fr);
-  gap: 3rem var(--gutter);
-  align-items: center;
+  grid-template-columns: minmax(0, var(--measure));
   align-content: center;
   max-width: var(--col);
   min-height: calc(60svh - var(--nav) - 3rem);
@@ -357,15 +355,6 @@ footer a:hover {
   font-size: 0.9rem;
 }
 
-.specimen {
-  margin: 0;
-  justify-self: end;
-  width: min(100%, 16rem);
-}
-
-
-
-
 /* Sections */
 
 /* One left edge. Every section spans the column; prose inside it stops at the
@@ -398,25 +387,6 @@ section {
   border: 1px solid var(--rule);
   background: #32302d;
 }
-
-/* An empty picture slot, until the capture exists. */
-.slot {
-  border: 1px solid var(--rule);
-  border-radius: 6px;
-}
-
-.slot-window {
-  aspect-ratio: 1400 / 876;
-}
-
-.slot-step {
-  aspect-ratio: 3 / 2;
-}
-
-.slot-plate {
-  aspect-ratio: 320 / 440;
-}
-
 
 /* How it works: the first step is the section. Its title and caption head it, and its picture,
    the whole window changing, runs the column's width under them. The other two steps are clips
@@ -740,7 +710,6 @@ footer a {
   }
 
   .hero {
-    grid-template-columns: 1fr;
     min-height: 0;
     padding: 3rem 0;
   }
@@ -760,12 +729,6 @@ footer a {
     margin-left: 0.4rem;
     translate: 0;
     vertical-align: -0.1em;
-  }
-
-  .specimen {
-    order: -1;
-    justify-self: start;
-    width: 11rem;
   }
 
   .steps ul,
