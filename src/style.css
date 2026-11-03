@@ -1,6 +1,11 @@
 /* Brand only. The shell keeps its own theme (shared/src/themes.ts); this is the
    cousin of Toyon Light that VOICE.md describes, on Toyon Light's own paper:
-   sage leaves, and the berry as the one saturated thing on the page. */
+   sage leaves, and the berry as the one saturated thing on the page.
+
+   The site has two grounds and no toggle. The brand pages (the landing page, Impressum,
+   Datenschutz) are the paper; the docs are read beside the app, which boots into Toyon Dark,
+   so they take that theme's ground and inks instead (`.dark`, below). build.ts sets the class
+   on <html> per page. */
 
 /* Newsreader cut down to what the page uses: the Latin glyphs, the one weight (400; no italic
    is set anywhere), and the optical sizes from the smallest heading to the headline. A weight
@@ -56,6 +61,26 @@
   --gutter: clamp(1.25rem, 5vw, 3rem);
 }
 
+/* The docs: Toyon Dark's ground and inks, lifted the way the paper above lifts Toyon Light's
+   (surface0, surface1, surface2, text0, text1). The berry is that theme's red, the lightness
+   the shell derived for a red that still reads small on this ground; it keeps the same roles
+   it has on paper, the only saturated thing on the page. */
+.dark {
+  color-scheme: dark;
+
+  --paper: #32302d;
+  --berry: #ff4929;
+  --ink: #e6dcb6;
+  /* The shell's second tier falls 46 L* below the first so a transcript triages at a glance;
+     a page of prose set in it reads as dim (4.2:1 here, where the paper's second ink holds
+     5.5:1). The docs' body sits halfway between the theme's first and second inks instead,
+     at 6.6:1, and keeps the same warm hue. */
+  --ink-2: #c2b79a;
+  --rule: #504943;
+  --line: rgb(230 220 182 / 0.4);
+  --code-bg: #3d3835;
+}
+
 *,
 *::before,
 *::after {
@@ -108,7 +133,7 @@ a:hover {
 }
 
 ::selection {
-  background: rgb(168 50 41 / 0.22);
+  background: color-mix(in srgb, var(--berry) 22%, transparent);
 }
 
 :focus-visible {

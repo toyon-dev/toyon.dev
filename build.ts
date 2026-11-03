@@ -2,7 +2,8 @@
 // content; both go into src/layout.html, which holds everything the pages share, with style.css
 // inlined so a page arrives as one response. The markdown in src/docs/ (copies of the Toyon
 // repository's docs, see scripts/docs.ts) renders at /docs/<name>, with an index at /docs/.
-// public/ is copied over as it is.
+// The docs are the one dark part of the site: the brand pages are on paper, the docs are read
+// beside the app and take its own dark theme (style.css, `.dark`). public/ is copied over as it is.
 //
 //   bun build.ts            build once
 //   bun build.ts --serve    build, rebuild as src/ and public/ change, and serve dist/ on $PORT
@@ -50,8 +51,12 @@ async function build() {
   const layout = await readFile(join(SRC, "layout.html"), "utf8");
   // the stylesheet's comments are for whoever edits it, not the visitor
   const css = (await readFile(join(SRC, "style.css"), "utf8")).replace(/\/\*[\s\S]*?\*\//g, "").replace(/\n{3,}/g, "\n\n").trim();
-  const render = (head: string, body: string) =>
+  // The layout is written for the light pages; a dark page swaps the scheme class on <html> and
+  // the browser chrome's colour, and the stylesheet does the rest.
+  const render = (head: string, body: string, scheme: "light" | "dark" = "light") =>
     layout
+      .replace('<html lang="en" class="light">', () => `<html lang="en" class="${scheme}">`)
+      .replace('<meta name="theme-color" content="#f8f2e8">', () => `<meta name="theme-color" content="${scheme === "dark" ? "#32302d" : "#f8f2e8"}">`)
       .replace("<!-- head -->", () => head)
       .replace("<!-- css -->", () => css)
       .replace("<!-- body -->", () => body);
@@ -65,7 +70,7 @@ async function build() {
   await docs(render);
 }
 
-async function docs(render: (head: string, body: string) => string) {
+async function docs(render: (head: string, body: string, scheme: "dark") => string) {
   const dir = join(SRC, DOCS);
   const names = ((await readdir(dir).catch(() => [])) as string[])
     .filter((n) => n.endsWith(".md"))
@@ -84,7 +89,7 @@ async function docs(render: (head: string, body: string) => string) {
     // the way up to the index sits above the title, named for where it goes rather than "back"
     const up = `    <a class="up" href="/${DOCS}/"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.5 3.5 5 8l4.5 4.5M5 8h8"/></svg>Docs</a>\n`;
     const body = `  <main class="prose doc">\n${up}${marked.parser(tokens)}  </main>`;
-    await writeFile(join(OUT, DOCS, `${name}.html`), render(head, body));
+    await writeFile(join(OUT, DOCS, `${name}.html`), render(head, body, "dark"));
     index.push(`      <li><a href="/${DOCS}/${name}">${esc(title)}</a> <span>${esc(sentences(text, 1))}</span></li>`);
   }
   const head = `  <title>Docs: Toyon</title>\n  <meta name="description" content="What Toyon reads, runs and refuses: the settings file, the preview, the agents, running it off your laptop, trust and policy.">`;
@@ -95,7 +100,7 @@ async function docs(render: (head: string, body: string) => string) {
 ${index.join("\n")}
     </ul>
   </main>`;
-  await writeFile(join(OUT, DOCS, "index.html"), render(head, body));
+  await writeFile(join(OUT, DOCS, "index.html"), render(head, body, "dark"));
 }
 
 if (!process.argv.includes("--serve")) {
