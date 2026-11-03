@@ -1,31 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Toyon</title>
   <meta name="description" content="Toyon is where coding agents work on your web app while you check each change by using it. Every chat gets its own running copy with a live preview.">
-  <meta name="theme-color" content="#f8f2e8">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://toyon.dev/">
   <meta property="og:title" content="Toyon">
   <meta property="og:description" content="Toyon is where coding agents work on your web app while you check each change by using it. Every chat gets its own running copy with a live preview.">
   <meta property="og:image" content="https://toyon.dev/toyon.jpg">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="preload" href="fonts/newsreader-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <nav class="nav" aria-label="Site">
-    <a class="wordmark" href="/">toyon</a>
-    <a class="github" href="https://github.com/toyon-dev/toyon" aria-label="Toyon on GitHub">
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
-      </svg>
-    </a>
-  </nav>
-
   <main>
     <header class="hero">
       <div>
@@ -40,7 +23,11 @@
 
     <section class="window" aria-label="Toyon in use">
       <figure>
-        <img src="media/window.jpg" width="1400" height="876" alt="The Toyon window. The list of chats down the left, the chat beside it with the agent's reply, and the app it is working on, a plant shop, filling the rest of the window.">
+        <!-- The 2x capture, and a 1x cut of it for ordinary screens; the JPG is for browsers without AVIF. -->
+        <picture>
+          <source type="image/avif" srcset="/media/window-1400.avif 1400w, /media/window.avif 2800w" sizes="(min-width: 1404px) 1404px, 100vw">
+          <img src="/media/window.jpg" width="1400" height="876" fetchpriority="high" alt="The Toyon window. The list of chats down the left, the chat beside it with the agent's reply, and the app it is working on, a plant shop, filling the rest of the window.">
+        </picture>
       </figure>
     </section>
 
@@ -63,7 +50,7 @@ npx toyon</code></pre>
       <ul>
         <li>
           <figure>
-            <video src="media/ask.mp4" poster="media/ask.jpg" width="1254" height="836" autoplay muted loop playsinline preload="metadata" aria-label="A chat beside the app, a plant shop. The chat says: give the shop a dark background with cream text. The shop turns dark while the agent works."></video>
+            <video src="/media/ask.mp4" poster="/media/ask.avif" width="1254" height="836" autoplay muted loop playsinline preload="metadata" aria-label="A chat beside the app, a plant shop. The chat says: give the shop a dark background with cream text. The shop turns dark while the agent works."></video>
           </figure>
           <div>
             <h3>Ask, and watch it change</h3>
@@ -72,16 +59,22 @@ npx toyon</code></pre>
         </li>
         <li>
           <figure>
-            <img src="media/rail.jpg" width="576" height="384" loading="lazy" alt="The list of chats down the side of the window: Background task, UX Redesign, Pin favorites, Mobile header, Dark mode. A coloured dot beside each says whether it is working, waiting on you or done, with a count of what it changed and how long ago.">
+            <picture>
+              <source type="image/avif" srcset="/media/rail.avif">
+              <img src="/media/rail.jpg" width="576" height="384" loading="lazy" alt="The list of chats down the side of the window: Background task, UX Redesign, Pin favorites, Mobile header, Dark mode. A dot beside each says what it is doing: purple for Background task, where something still runs after the agent's turn; orange for UX Redesign, waiting on you; green for Dark mode, selected, with its app up. Two rows show a count of what they changed and how long ago.">
+            </picture>
           </figure>
           <div>
             <h3>Know where every chat stands</h3>
-            <p>Every chat gets its own copy of your project with the app running. The list says which ones are working, which are waiting on you, and what each one changed.</p>
+            <p>Every chat gets its own copy of your project with the app running. The dot beside each says where it stands: green with the app up, purple while a task it started still runs in the background, orange when it is waiting on you. The counts say what each one changed.</p>
           </div>
         </li>
         <li>
           <figure>
-            <img src="media/phone.jpg" width="840" height="560" loading="lazy" alt="The app in dark mode with an Open on your phone dialog over it, a code to scan with the phone's camera. A phone beside it already shows the project's one chat, Dark theme.">
+            <picture>
+              <source type="image/avif" srcset="/media/phone.avif">
+              <img src="/media/phone.jpg" width="840" height="560" loading="lazy" alt="The app in dark mode with an Open on your phone dialog over it, a code to scan with the phone's camera. A phone beside it already shows the project's one chat, Dark theme.">
+            </picture>
           </figure>
           <div>
             <h3>From your phone</h3>
@@ -92,13 +85,4 @@ npx toyon</code></pre>
     </section>
 
   </main>
-
-  <footer>
-    <p>MIT licensed, no account, no telemetry.</p>
-    <ul>
-      <li><a href="impressum.html">Impressum</a></li>
-      <li><a href="datenschutz.html">Datenschutz</a></li>
-    </ul>
-  </footer>
 </body>
-</html>

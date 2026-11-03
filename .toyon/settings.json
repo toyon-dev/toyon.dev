@@ -1,7 +1,8 @@
 {
   "run": {
-    "web": "bunx serve -l $PORT ."
+    "web": "bun build.ts --serve"
   },
+  "check": "bun build.ts",
   "land": {
     "route": "merge"
   }
