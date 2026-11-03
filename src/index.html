@@ -37,7 +37,7 @@
         <h2>On your machine</h2>
         <pre><code>cd your-project
 npx toyon</code></pre>
-        <p class="note">macOS and Linux. Needs Node 18 or newer and an account for <a href="/docs/agents">the agent you pick</a>; the <a href="https://github.com/toyon-dev/toyon#install">README</a> has the rest.</p>
+        <p class="note">macOS and Linux. Needs Node 18 or newer and an account for <a href="/docs/agents">the agent you pick</a>; <a href="/docs/install">the install doc</a> has the rest.</p>
       </div>
       <div>
         <h2>On your own server</h2>
@@ -46,10 +46,10 @@ npx toyon</code></pre>
       </div>
     </section>
 
-    <section id="how-it-works" class="steps">
+    <section class="steps">
       <header>
         <h2>Ask, and watch it change</h2>
-        <p>Say what you want, or point at the thing on the page. The app updates while the agent works; steer it mid-way, or fix the small thing yourself.</p>
+        <p>Say what you want, or point at it on the page. The app updates as the agent works; steer it, or fix the small thing yourself.</p>
       </header>
       <figure>
         <video src="/media/ask.mp4" poster="/media/ask.avif" width="1254" height="836" autoplay muted loop playsinline preload="metadata" aria-label="A chat beside the app, a plant shop. The chat says: give the shop a dark background with cream text. The shop turns dark while the agent works."></video>
@@ -58,7 +58,7 @@ npx toyon</code></pre>
         <li>
           <div>
             <h3>Know where every chat stands</h3>
-            <p>The dot beside each chat says where it stands: green with the app up, purple while a task still runs, orange when it is waiting on you. The counts say what it changed.</p>
+            <p>The dot beside each chat says whether its app is up or it is waiting on you; the counts say what it changed.</p>
           </div>
           <figure>
             <picture>
@@ -83,4 +83,13 @@ npx toyon</code></pre>
     </section>
 
   </main>
+  <script>
+    // The one in-page link scrolls to the section without leaving #install in the address bar;
+    // fragments are for the docs, where a section is worth sharing. Without script it is a plain
+    // anchor and still lands.
+    document.querySelector('.start a[href="#install"]').addEventListener("click", (e) => {
+      e.preventDefault();
+      document.getElementById("install").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  </script>
 </body>
