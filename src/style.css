@@ -418,13 +418,16 @@ section {
   margin-bottom: 0.75rem;
 }
 
+/* as wide as one of the cards below, so the three captions share a measure */
 .steps header p {
-  max-width: var(--measure);
+  max-width: calc((100% - var(--gutter)) / 2);
   margin-bottom: 2.5rem;
 }
 
+/* short of a section's 7rem, since the pair belongs to this one, but more than a row gap: the
+   picture above is tall, and the eye needs a beat before the next titles */
 .steps > figure {
-  margin-bottom: 4rem;
+  margin-bottom: 5.5rem;
 }
 
 .steps ul {
@@ -487,9 +490,11 @@ section {
 /* Prose pages: Impressum, Datenschutz and the docs. Headings in the reading face, the text
    itself in the sans, held to the measure. */
 
+/* The title sits about where the landing page's headline does on a laptop screen, so the step
+   from one page to the next moves the ground, not the words. */
 .prose {
   max-width: var(--col);
-  margin: 3rem auto 0;
+  margin: 6rem auto 0;
 }
 
 .prose p,
@@ -525,6 +530,49 @@ section {
   font-size: 1.05rem;
   font-weight: 400;
   margin: 1.5rem 0 0.5rem;
+}
+
+/* A section's link hangs in the margin left of its heading, at the rule's weight like the GitHub
+   mark, and only while the heading is under the pointer or the link has focus. A deep link
+   stops a little short of the top so the heading is not pressed against the edge. */
+.doc h2,
+.doc h3 {
+  position: relative;
+  scroll-margin-top: 1.5rem;
+}
+
+.doc .anchor {
+  position: absolute;
+  top: 50%;
+  left: -1.5rem;
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  translate: 0 -50%;
+  color: var(--line);
+  opacity: 0;
+  transition: opacity 150ms;
+}
+
+.doc .anchor svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.doc h2:hover .anchor,
+.doc h3:hover .anchor,
+.doc .anchor:focus-visible {
+  opacity: 1;
+}
+
+.doc .anchor:hover {
+  color: var(--ink-2);
 }
 
 .prose strong {
@@ -583,9 +631,13 @@ section {
   padding-right: 0;
 }
 
-/* The docs index: each doc's title in the reading face, its first sentence under it. */
+/* The docs index: no title to the eye, just each doc's title in the reading face with its first
+   sentence under it, starting on the line where a doc's way up sits. A list of one-line
+   summaries reads better short of the measure. */
 .prose .docs {
+  max-width: 32rem;
   list-style: none;
+  margin: 0;
   padding: 0;
 }
 
@@ -683,6 +735,19 @@ footer a {
     font-size: 1rem;
   }
 
+  .prose {
+    margin-top: 3rem;
+  }
+
+  /* no margin to hang in: the link follows the heading's words instead */
+  .doc .anchor {
+    position: static;
+    display: inline-block;
+    margin-left: 0.4rem;
+    translate: 0;
+    vertical-align: -0.1em;
+  }
+
   .specimen {
     order: -1;
     justify-self: start;
@@ -696,6 +761,10 @@ footer a {
 
   .steps > figure {
     margin-bottom: 3rem;
+  }
+
+  .steps header p {
+    max-width: none;
   }
 
   /* one card under another, so each keeps its own two rows */

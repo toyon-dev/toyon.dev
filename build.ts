@@ -18,7 +18,7 @@ const PUBLIC = "public";
 const OUT = "dist";
 const DOCS = "docs";
 // the docs' reading order on the index; anything not named follows, alphabetically
-const ORDER = ["settings", "preview", "agents", "remote", "trust", "policy"];
+const ORDER = ["install", "settings", "preview", "agents", "remote", "trust", "policy"];
 const REPO = "https://github.com/toyon-dev/toyon/blob/main/docs/";
 const RAW = "https://raw.githubusercontent.com/toyon-dev/toyon/main/docs/";
 
@@ -45,18 +45,42 @@ const relink = (token: Token) => {
   if (doc) token.href = `/${DOCS}/${doc[1]}${doc[2] ?? ""}`;
   else token.href = new URL(token.href, token.type === "image" ? RAW : REPO).href;
 };
-const marked = new Marked();
+// Every heading under a doc's title gets an id from its words, the way GitHub makes them, so the
+// docs' own `settings.md#keys` links land on the section and a visitor can link to one. The link
+// glyph beside it is drawn to the shell's icon rules (shell ui/Icon.tsx: a 16px box, the drawing
+// filling 12px of it, one 1.3 stroke), since the set has no link glyph of its own.
+const LINK = '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M6.3 9.7 9.7 6.3 M8.4 11.6l-1.5 1.5a2.6 2.6 0 0 1-3.68-3.68l1.5-1.5 M7.6 4.4l1.5-1.5a2.6 2.6 0 0 1 3.68 3.68l-1.5 1.5"/></svg>';
+let slugs = new Set<string>();
+const slug = (text: string) => {
+  const base = plain(text).toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "-").replace(/^-|-$/g, "");
+  let id = base;
+  for (let n = 1; slugs.has(id); n++) id = `${base}-${n}`;
+  slugs.add(id);
+  return id;
+};
+const marked = new Marked({
+  renderer: {
+    heading({ tokens, depth, text }) {
+      const inner = this.parser.parseInline(tokens);
+      if (depth === 1) return `<h1>${inner}</h1>\n`;
+      const id = slug(text);
+      return `<h${depth} id="${id}">${inner}<a class="anchor" href="#${id}" aria-label="Link to this section">${LINK}</a></h${depth}>\n`;
+    },
+  },
+});
 
 async function build() {
   const layout = await readFile(join(SRC, "layout.html"), "utf8");
   // the stylesheet's comments are for whoever edits it, not the visitor
   const css = (await readFile(join(SRC, "style.css"), "utf8")).replace(/\/\*[\s\S]*?\*\//g, "").replace(/\n{3,}/g, "\n\n").trim();
   // The layout is written for the light pages; a dark page swaps the scheme class on <html> and
-  // the browser chrome's colour, and the stylesheet does the rest.
+  // the browser chrome's colour, drops the nav's Docs link (the reader is already there), and
+  // the stylesheet does the rest.
   const render = (head: string, body: string, scheme: "light" | "dark" = "light") =>
     layout
       .replace('<html lang="en" class="light">', () => `<html lang="en" class="${scheme}">`)
       .replace('<meta name="theme-color" content="#f8f2e8">', () => `<meta name="theme-color" content="${scheme === "dark" ? "#32302d" : "#f8f2e8"}">`)
+      .replace(/\n\s*<a href="\/docs\/">Docs<\/a>(?=\n\s*<a class="github")/, () => (scheme === "dark" ? "" : '\n      <a href="/docs/">Docs</a>'))
       .replace("<!-- head -->", () => head)
       .replace("<!-- css -->", () => css)
       .replace("<!-- body -->", () => body);
@@ -70,6 +94,16 @@ async function build() {
   await docs(render);
 }
 
+// Escape on a doc goes up to the index, the way it shuts a panel in the app; the index itself
+// is the top of the docs and takes no key. Unannounced: whoever reaches for it finds it, and
+// nobody else is told about a key.
+const ESCAPE = `  <script>
+    addEventListener("keydown", (e) => {
+      if (e.key !== "Escape" || e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return;
+      location.assign("/${DOCS}/");
+    });
+  </script>`;
+
 async function docs(render: (head: string, body: string, scheme: "dark") => string) {
   const dir = join(SRC, DOCS);
   const names = ((await readdir(dir).catch(() => [])) as string[])
@@ -79,6 +113,7 @@ async function docs(render: (head: string, body: string, scheme: "dark") => stri
   await mkdir(join(OUT, DOCS), { recursive: true });
   const index: string[] = [];
   for (const name of names) {
+    slugs = new Set();
     const tokens = marked.lexer(await readFile(join(dir, `${name}.md`), "utf8"));
     marked.walkTokens(tokens, relink);
     const heading = tokens.find((t) => t.type === "heading" && t.depth === 1);
@@ -88,14 +123,14 @@ async function docs(render: (head: string, body: string, scheme: "dark") => stri
     const head = `  <title>${esc(title)}: Toyon</title>\n  <meta name="description" content="${esc(sentences(text, 120))}">`;
     // the way up to the index sits above the title, named for where it goes rather than "back"
     const up = `    <a class="up" href="/${DOCS}/"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.5 3.5 5 8l4.5 4.5M5 8h8"/></svg>Docs</a>\n`;
-    const body = `  <main class="prose doc">\n${up}${marked.parser(tokens)}  </main>`;
+    const body = `  <main class="prose doc">\n${up}${marked.parser(tokens)}  </main>\n${ESCAPE}`;
     await writeFile(join(OUT, DOCS, `${name}.html`), render(head, body, "dark"));
     index.push(`      <li><a href="/${DOCS}/${name}">${esc(title)}</a> <span>${esc(sentences(text, 1))}</span></li>`);
   }
-  const head = `  <title>Docs: Toyon</title>\n  <meta name="description" content="What Toyon reads, runs and refuses: the settings file, the preview, the agents, running it off your laptop, trust and policy.">`;
-  const body = `  <main class="prose">
-    <h1>Docs</h1>
-    <p>The same pages as the <a href="https://github.com/toyon-dev/toyon/tree/main/docs">repository's docs folder</a>, as of the last release.</p>
+  const head = `  <title>Docs: Toyon</title>\n  <meta name="description" content="Installing Toyon, and what it reads, runs and refuses: the settings file, the preview, the agents, running it off your laptop, trust and policy.">`;
+  // the list is the page; the title is for the outline and a screen reader, not the eye
+  const body = `  <main class="prose index">
+    <h1 class="sr-only">Docs</h1>
     <ul class="docs">
 ${index.join("\n")}
     </ul>
