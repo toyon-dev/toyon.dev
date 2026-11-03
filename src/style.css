@@ -2,20 +2,15 @@
    cousin of Toyon Light that VOICE.md describes, on Toyon Light's own paper:
    sage leaves, and the berry as the one saturated thing on the page. */
 
+/* Newsreader cut down to what the page uses: the Latin glyphs, the one weight (400; no italic
+   is set anywhere), and the optical sizes from the smallest heading to the headline. A weight
+   or an italic added here would need a fresh cut from the full font. */
 @font-face {
   font-family: "Newsreader";
   font-style: normal;
-  font-weight: 200 800;
+  font-weight: 400;
   font-display: swap;
-  src: url("fonts/newsreader-latin-opsz-normal.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Newsreader";
-  font-style: italic;
-  font-weight: 200 800;
-  font-display: swap;
-  src: url("fonts/newsreader-latin-opsz-italic.woff2") format("woff2");
+  src: url("/fonts/newsreader-latin-opsz-400.woff2") format("woff2");
 }
 
 @font-face {
@@ -23,7 +18,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("fonts/toyon-mono-regular.woff2") format("woff2");
+  src: url("/fonts/toyon-mono-regular.woff2") format("woff2");
 }
 
 @font-face {
@@ -31,7 +26,7 @@
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url("fonts/toyon-mono-medium.woff2") format("woff2");
+  src: url("/fonts/toyon-mono-medium.woff2") format("woff2");
 }
 
 :root {
@@ -522,4 +517,3 @@ footer a:hover {
     padding-top: 4.5rem;
   }
 }
-

@@ -1,0 +1,22 @@
+# Cloudflare Pages headers. The pages themselves keep Pages' default (max-age=0, revalidated with
+# an ETag) so a deploy shows at once; the font never changes short of a rename, and a picture
+# changes only with a re-shoot, so a week is the most a returning visitor can lag.
+
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/media/*
+  Cache-Control: public, max-age=604800
+
+/icon.svg
+  Cache-Control: public, max-age=86400
+
+# Early Hints: the font starts downloading before the page's bytes arrive.
+/
+  Link: </fonts/newsreader-latin-opsz-400.woff2>; rel=preload; as=font; crossorigin
+
+/impressum
+  Link: </fonts/newsreader-latin-opsz-400.woff2>; rel=preload; as=font; crossorigin
+
+/datenschutz
+  Link: </fonts/newsreader-latin-opsz-400.woff2>; rel=preload; as=font; crossorigin
