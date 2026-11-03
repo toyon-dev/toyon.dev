@@ -59,6 +59,7 @@
   --col-wide: 78rem;
   --measure: 42rem;
   --gutter: clamp(1.25rem, 5vw, 3rem);
+  --nav: 4.5rem; /* the nav's padding and the wordmark's line, for the hero's sum */
 }
 
 /* The docs: Toyon Dark's ground and inks, lifted the way the paper above lifts Toyon Light's
@@ -207,45 +208,39 @@ pre {
   text-decoration: none;
 }
 
-/* Under the pointer, the app's live-text sweep (shell styles/base.css) in the berry instead of
-   the text's lit tier: the one saturated thing on the page passes through the name for as long
-   as the pointer stays. The band is clipped to the glyphs. The gradient is twice the word wide
-   with the band across its middle fifth, so nearly the whole travel from 150% to -50% is the
-   band crossing the letters, and at both ends only the ink shows, so the loop has no seam. At
-   rest the name is plain ink. */
-.wordmark:hover {
-  background: linear-gradient(110deg, var(--ink) 30%, var(--berry) 40%, var(--berry) 60%, var(--ink) 70%);
-  background-size: 200% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  /* 1.1s a pass, which is the app's own pace once the shorter travel here is allowed for */
-  animation: wordmark-sweep 1.1s linear infinite;
+/* The wordmark and the footer's links share one hover: a short fade to the berry, and back. */
+.wordmark,
+footer a {
+  transition: color 150ms;
 }
 
-@keyframes wordmark-sweep {
-  from {
-    background-position: 150% 0;
-  }
-  to {
-    background-position: -50% 0;
-  }
+.wordmark:hover,
+footer a:hover {
+  color: var(--berry);
 }
 
-/* a sweep modulates the contrast of the word being read; held still, the hover is the berry
-   outright, as the nav's links are */
-@media (prefers-reduced-motion: reduce) {
-  .wordmark:hover {
-    background: none;
-    -webkit-text-fill-color: var(--berry);
-    animation: none;
-  }
+/* Docs beside the GitHub mark, in the sans at the second ink; the baseline is the wordmark's. */
+.nav .links {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  font-family: var(--face-ui);
+  font-size: 0.85rem;
+  color: var(--ink-2);
+}
+
+.nav .links a {
+  text-decoration: none;
+  transition: color 150ms;
+}
+
+.nav .links a:hover {
+  color: var(--berry);
 }
 
 /* The one link off the page is the GitHub mark, kept small and at the rule's weight so it only
    hints that it is there; under the pointer it firms up to the second ink, never the berry. */
 .nav .github {
-  align-self: center;
   display: block;
   color: var(--line);
 }
@@ -257,19 +252,26 @@ pre {
   fill: currentColor;
 }
 
-.nav .github:hover {
+.nav .links .github:hover {
   color: var(--ink-2);
 }
 
 /* Hero: text to the left, the specimen in the right margin. */
 
+/* The hero fills the top of the screen down to where the screenshot starts, at about three
+   fifths of the viewport, so the window's top edge shows above the fold and says there is more.
+   The nav above and the screenshot's own gap below are taken off the height; the text sits in
+   the middle of what is left, and never closer than 5rem to either. */
 .hero {
   display: grid;
   grid-template-columns: minmax(0, var(--measure)) minmax(14rem, 1fr);
   gap: 3rem var(--gutter);
   align-items: center;
+  align-content: center;
   max-width: var(--col);
-  margin: 7rem auto 0;
+  min-height: calc(60svh - var(--nav) - 3rem);
+  margin: 0 auto;
+  padding: 5rem 0;
 }
 
 .hero > div:first-child {
@@ -281,12 +283,30 @@ pre {
 .hero h1 {
   font-size: min(clamp(2rem, 1.2rem + 2.4vw, 2.75rem), 6.6cqi);
   line-height: 1.12;
-  margin-bottom: 2.25rem;
+  margin-bottom: 1.25rem;
   white-space: nowrap;
 }
 
 .hero h1 .line {
   display: block;
+}
+
+/* The headline's second sentence (VOICE.md, "Lines"), in the reading face at the second ink. */
+.hero .lede {
+  max-width: 30rem;
+  margin-bottom: 2.25rem;
+  font-size: 1.15rem;
+  line-height: 1.4;
+  color: var(--ink-2);
+}
+
+@keyframes wordmark-sweep {
+  from {
+    background-position: 150% 0;
+  }
+  to {
+    background-position: -50% 0;
+  }
 }
 
 /* The page's one entrance: the berry passes through the headline once, just after the fonts
@@ -350,7 +370,7 @@ section {
 /* The one thing allowed past the column: the screenshot runs wider. */
 .window {
   max-width: var(--col-wide);
-  padding-top: 5rem;
+  padding-top: 3rem;
 }
 
 .window figure,
@@ -388,36 +408,52 @@ section {
 }
 
 
-/* How it works: the heading on the page column, the three pictured items on
-   the wide one, picture above, title and caption below. */
-
-.steps {
-  max-width: var(--col-wide);
-}
+/* How it works: the first step is the section. Its title and caption head it, and its picture,
+   the whole window changing, runs the column's width under them. The other two steps are clips
+   of the window at 2x, taken for a card's width, so they follow as a pair of cards laid out
+   the same way, title and caption above the picture. All on the page column; only the hero's
+   screenshot runs wide. */
 
 .steps h2 {
-  margin-left: max(0px, calc((100% - var(--col)) / 2));
+  margin-bottom: 0.75rem;
+}
+
+.steps header p {
+  max-width: var(--measure);
+  margin-bottom: 2.5rem;
+}
+
+.steps > figure {
+  margin-bottom: 4rem;
 }
 
 .steps ul {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem var(--gutter);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 3rem var(--gutter);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
+/* Each card takes two of the list's rows, text then picture, and shares them with its
+   neighbour, so the pictures start on the same line however long the captions run. */
 .steps li {
+  grid-row: span 2;
   display: grid;
-  gap: 0;
+  grid-template-rows: subgrid;
+  row-gap: 0;
+}
+
+.steps li figure {
+  margin-top: 1rem;
 }
 
 .steps h3 {
   font-size: 1.4rem;
   font-weight: 400;
   line-height: 1.2;
-  margin: 1rem 0 0.35rem;
+  margin: 0 0 0.35rem;
 }
 
 .steps p {
@@ -630,10 +666,6 @@ footer a {
   text-decoration: none;
 }
 
-footer a:hover {
-  color: var(--berry);
-}
-
 /* Phones */
 
 @media (max-width: 40rem) {
@@ -643,7 +675,12 @@ footer a:hover {
 
   .hero {
     grid-template-columns: 1fr;
-    margin-top: 3rem;
+    min-height: 0;
+    padding: 3rem 0;
+  }
+
+  .hero .lede {
+    font-size: 1rem;
   }
 
   .specimen {
@@ -657,10 +694,14 @@ footer a:hover {
     grid-template-columns: 1fr;
   }
 
-  /* Title and caption first on a phone, the picture under them. */
-  .steps li figure {
-    order: 1;
-    margin-top: 1rem;
+  .steps > figure {
+    margin-bottom: 3rem;
+  }
+
+  /* one card under another, so each keeps its own two rows */
+  .steps li {
+    grid-row: auto;
+    grid-template-rows: auto auto;
   }
 
   /* The headline fits its column, about 21-25px here, so the section
