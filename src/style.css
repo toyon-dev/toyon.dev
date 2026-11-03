@@ -99,9 +99,18 @@ html {
   scroll-behavior: smooth;
 }
 
+/* The page is at least the window tall, and the footer sits at its foot: on a short page (the
+   Impressum, a one-screen doc) it rests at the bottom edge instead of floating mid-screen. */
 body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
   margin: 0;
   padding: 0 var(--gutter);
+}
+
+main {
+  flex: 1 0 auto;
 }
 
 /* One page gives way to the next with a short fade: a cross-document view transition, which a
@@ -197,6 +206,7 @@ pre {
   align-items: baseline;
   justify-content: space-between;
   gap: 1.5rem;
+  width: 100%;
   max-width: var(--col);
   margin: 0 auto;
   padding: 1.5rem 0;
@@ -459,11 +469,13 @@ section {
   margin: 0 0 0.35rem;
 }
 
+/* two lines of near the same length, not a long one and a short one */
 .steps p {
   font-family: var(--face-ui);
   font-size: 0.9rem;
   line-height: 1.55;
   color: var(--ink-2);
+  text-wrap: balance;
 }
 
 /* Local and off the laptop, side by side. */
@@ -493,6 +505,7 @@ section {
 /* The title sits about where the landing page's headline does on a laptop screen, so the step
    from one page to the next moves the ground, not the words. */
 .prose {
+  width: 100%; /* a flex item with auto margins would otherwise shrink to its words and drift off the left edge */
   max-width: var(--col);
   margin: 6rem auto 0;
 }
@@ -689,9 +702,10 @@ section {
 /* Footer */
 
 footer {
+  width: 100%;
   max-width: var(--col);
   margin: 7rem auto 0;
-  padding: 1.5rem 0 2.5rem;
+  padding: 1.5rem 0 4rem;
   border-top: 1px solid var(--rule);
   display: flex;
   flex-wrap: wrap;
