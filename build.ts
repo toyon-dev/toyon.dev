@@ -55,8 +55,10 @@ const relink = (token: Token) => {
 // Every heading under a doc's title gets an id from its words, the way GitHub makes them, so the
 // docs' own `settings.md#keys` links land on the section and a visitor can link to one. The link
 // glyph beside it is drawn to the shell's icon rules (shell ui/Icon.tsx: a 16px box, the drawing
-// filling 12px of it, one 1.3 stroke), since the set has no link glyph of its own.
-const LINK = '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M6.3 9.7 9.7 6.3 M8.4 11.6l-1.5 1.5a2.6 2.6 0 0 1-3.68-3.68l1.5-1.5 M7.6 4.4l1.5-1.5a2.6 2.6 0 0 1 3.68 3.68l-1.5 1.5"/></svg>';
+// filling 12px of it, one 1.3 stroke), since the set has no link glyph of its own; the check it
+// turns into for a moment after a click is the shell's own.
+const LINK =
+  '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path class="link" d="M6.3 9.7 9.7 6.3 M8.4 11.6l-1.5 1.5a2.6 2.6 0 0 1-3.68-3.68l1.5-1.5 M7.6 4.4l1.5-1.5a2.6 2.6 0 0 1 3.68 3.68l-1.5 1.5"/><path class="check" d="M3.4 8.4 6.4 11.4 12.6 4.6"/></svg>';
 let slugs = new Set<string>();
 const slug = (text: string) => {
   const base = plain(text).toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "-").replace(/^-|-$/g, "");
@@ -101,14 +103,26 @@ async function build() {
   await docs(render);
 }
 
-// Escape on a doc goes up to the index, the way it shuts a panel in the app; the index itself
-// is the top of the docs and takes no key. Unannounced: whoever reaches for it finds it, and
-// nobody else is told about a key.
-const ESCAPE = `  <script>
+// A doc's own script. Escape goes up to the index, the way it shuts a panel in the app; the
+// index itself is the top of the docs and takes no key. Unannounced: whoever reaches for it
+// finds it, and nobody else is told about a key. A plain click on a section's link is still the
+// link (the fragment lands in the address bar, and a modifier or the middle button opens it
+// wherever they would) and also puts the whole address on the clipboard, the glyph turning into
+// a check for a moment to say so. Where the clipboard is refused, the link alone remains.
+const SCRIPT = `  <script>
     addEventListener("keydown", (e) => {
       if (e.key !== "Escape" || e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return;
       location.assign("/${DOCS}/");
     });
+    for (const a of document.querySelectorAll(".anchor")) {
+      a.addEventListener("click", (e) => {
+        if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        navigator.clipboard?.writeText(a.href).then(() => {
+          a.classList.add("copied");
+          setTimeout(() => a.classList.remove("copied"), 1200);
+        }, () => {});
+      });
+    }
   </script>`;
 
 async function docs(render: (head: string, body: string, scheme: "dark") => string) {
@@ -130,7 +144,7 @@ async function docs(render: (head: string, body: string, scheme: "dark") => stri
     const head = `  <title>${esc(title)}: Toyon</title>\n  <meta name="description" content="${esc(sentences(text, 120))}">`;
     // the way up to the index sits above the title, named for where it goes rather than "back"
     const up = `    <a class="up" href="/${DOCS}/"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.5 3.5 5 8l4.5 4.5M5 8h8"/></svg>Docs</a>\n`;
-    const body = `  <main class="prose doc">\n${up}${marked.parser(tokens)}  </main>\n${ESCAPE}`;
+    const body = `  <main class="prose doc">\n${up}${marked.parser(tokens)}  </main>\n${SCRIPT}`;
     await writeFile(join(OUT, DOCS, `${name}.html`), render(head, body, "dark"));
     index.push(`      <li><a href="/${DOCS}/${name}">${esc(title)}</a> <span>${esc(sentences(text, 1))}</span></li>`);
   }
