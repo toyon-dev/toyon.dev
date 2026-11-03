@@ -195,7 +195,7 @@ if (!process.argv.includes("--serve")) {
     port: Number(process.env.PORT) || 3000,
     async fetch(req) {
       let path = decodeURIComponent(new URL(req.url).pathname);
-      // clean URLs as Cloudflare Pages serves them: /impressum is impressum.html, /docs is docs/
+      // clean URLs as Cloudflare Pages serves them: /datenschutz is datenschutz.html, /docs is docs/
       if (path.endsWith("/")) path += "index.html";
       else if (!/\.[a-z0-9]+$/i.test(path)) path = (await Bun.file(resolve(root, `.${path}.html`)).exists()) ? `${path}.html` : `${path}/index.html`;
       const file = resolve(root, `.${path}`);
