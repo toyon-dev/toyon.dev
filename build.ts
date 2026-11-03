@@ -81,7 +81,9 @@ async function docs(render: (head: string, body: string) => string) {
     const title = heading?.type === "heading" ? plain(heading.text) : name;
     const text = lede?.type === "paragraph" ? plain(lede.text) : "";
     const head = `  <title>${esc(title)}: Toyon</title>\n  <meta name="description" content="${esc(sentences(text, 120))}">`;
-    const body = `  <main class="prose doc">\n${marked.parser(tokens)}  </main>`;
+    // the way up to the index sits above the title, named for where it goes rather than "back"
+    const up = `    <a class="up" href="/${DOCS}/"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.5 3.5 5 8l4.5 4.5M5 8h8"/></svg>Docs</a>\n`;
+    const body = `  <main class="prose doc">\n${up}${marked.parser(tokens)}  </main>`;
     await writeFile(join(OUT, DOCS, `${name}.html`), render(head, body));
     index.push(`      <li><a href="/${DOCS}/${name}">${esc(title)}</a> <span>${esc(sentences(text, 1))}</span></li>`);
   }

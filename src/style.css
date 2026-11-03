@@ -78,6 +78,25 @@ body {
   padding: 0 var(--gutter);
 }
 
+/* One page gives way to the next with a short fade: a cross-document view transition, which a
+   browser without them ignores and loads the page as before. Short enough to read as the page
+   settling, not as an effect. */
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 150ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}
+
 a {
   color: inherit;
   text-decoration-color: var(--rule);
@@ -521,6 +540,37 @@ section {
 
 .prose .docs span {
   display: block;
+}
+
+/* The way up from a doc: the section's name above the title, in the sans at the second ink,
+   with a drawn arrow held at the rule's weight like the GitHub mark. It is named for where it
+   goes rather than "back", since the visitor may have arrived from the app or a search. */
+.doc .up {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+  font-family: var(--face-ui);
+  font-size: 0.85rem;
+  color: var(--ink-2);
+}
+
+.doc .up svg {
+  width: 0.85rem;
+  height: 0.85rem;
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.doc .up:hover {
+  color: var(--ink);
+}
+
+.doc .up:hover svg {
+  stroke: var(--ink-2);
 }
 
 /* Footer */
