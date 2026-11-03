@@ -105,12 +105,14 @@ async function build() {
 
 // A doc's own script. Escape goes up to the index, the way it shuts a panel in the app; the
 // index itself is the top of the docs and takes no key. Unannounced: whoever reaches for it
-// finds it, and nobody else is told about a key. A plain click on a section's link is still the
-// link (the fragment lands in the address bar, and a modifier or the middle button opens it
-// wherever they would) and also puts the whole address on the clipboard, the glyph turning into
-// a check for a moment to say so. Where the clipboard is refused, the link alone remains.
+// finds it, and nobody else is told about a key. It goes on keyup: Firefox reads Escape as
+// Stop, so a load started on the keydown is cancelled by the same press. A plain click on a
+// section's link is still the link (the fragment lands in the address bar, and a modifier or
+// the middle button opens it wherever they would) and also puts the whole address on the
+// clipboard, the glyph turning into a check for a moment to say so. Where the clipboard is
+// refused, the link alone remains.
 const SCRIPT = `  <script>
-    addEventListener("keydown", (e) => {
+    addEventListener("keyup", (e) => {
       if (e.key !== "Escape" || e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return;
       location.assign("/${DOCS}/");
     });
