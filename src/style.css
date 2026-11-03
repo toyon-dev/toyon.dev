@@ -404,15 +404,19 @@ section {
   color: var(--ink-2);
 }
 
-/* Impressum and Datenschutz: short prose pages in the reading face. */
+/* Prose pages: Impressum, Datenschutz and the docs. Headings in the reading face, the text
+   itself in the sans, held to the measure. */
 
-.legal {
+.prose {
   max-width: var(--col);
   margin: 3rem auto 0;
 }
 
-/* Headings in the reading face, the text itself in the sans. */
-.legal p {
+.prose p,
+.prose ul,
+.prose ol,
+.prose pre,
+.prose table {
   max-width: var(--measure);
   font-family: var(--face-ui);
   font-size: 0.95rem;
@@ -420,21 +424,103 @@ section {
   color: var(--ink-2);
 }
 
-.legal h1 + p {
-  color: var(--ink-2);
+/* the line under the title: the subtitle on a legal page, the lede of a doc */
+.prose h1 + p {
   opacity: 0.85;
   margin-bottom: 2.5rem;
 }
 
-.legal h1 {
+.prose h1 {
   font-size: 2rem;
   line-height: 1.15;
   margin-bottom: 1.5rem;
 }
 
-.legal h2 {
+.prose h2 {
   font-size: 1.25rem;
   margin: 2rem 0 0.5rem;
+}
+
+.prose h3 {
+  font-size: 1.05rem;
+  font-weight: 400;
+  margin: 1.5rem 0 0.5rem;
+}
+
+.prose strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.prose ul,
+.prose ol {
+  margin: 0 0 1rem;
+  padding-left: 1.25rem;
+}
+
+.prose li {
+  margin-bottom: 0.35rem;
+}
+
+.prose li p {
+  margin: 0;
+}
+
+.prose pre {
+  margin: 0 0 1rem;
+  font-family: var(--face-mono);
+  font-size: 0.78rem;
+  tab-size: 4; /* the docs' Caddyfile is indented with tabs */
+}
+
+/* A table scrolls sideways on a narrow screen rather than pushing the page out. The rules
+   run between rows only, in the page's rule colour. */
+.prose table {
+  display: block;
+  overflow-x: auto;
+  margin: 0 0 1.5rem;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.prose th,
+.prose td {
+  padding: 0.5rem 1rem 0.5rem 0;
+  text-align: left;
+  vertical-align: top;
+  border-top: 1px solid var(--rule);
+}
+
+.prose th {
+  font-weight: 500;
+  color: var(--ink);
+  border-top: 0;
+}
+
+.prose th:last-child,
+.prose td:last-child {
+  padding-right: 0;
+}
+
+/* The docs index: each doc's title in the reading face, its first sentence under it. */
+.prose .docs {
+  list-style: none;
+  padding: 0;
+}
+
+.prose .docs li {
+  margin-bottom: 1.25rem;
+}
+
+.prose .docs a {
+  font-family: var(--face-display);
+  font-size: 1.25rem;
+  color: var(--ink);
+}
+
+.prose .docs span {
+  display: block;
 }
 
 /* Footer */

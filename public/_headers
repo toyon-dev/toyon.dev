@@ -20,3 +20,9 @@
 
 /datenschutz
   Link: </fonts/newsreader-latin-opsz-400.woff2>; rel=preload; as=font; crossorigin
+
+/docs/
+  Link: </fonts/newsreader-latin-opsz-400.woff2>; rel=preload; as=font; crossorigin
+
+/docs/*
+  Link: </fonts/newsreader-latin-opsz-400.woff2>; rel=preload; as=font; crossorigin
