@@ -558,6 +558,28 @@ section {
   color: var(--ink-2);
 }
 
+/* just clicked: the address is on the clipboard, and the glyph says so for a moment */
+.doc .anchor .check,
+.doc .anchor.copied .link {
+  display: none;
+}
+
+.doc .anchor.copied {
+  color: var(--ink-2);
+  opacity: 1;
+}
+
+.doc .anchor.copied .check {
+  display: block;
+}
+
+/* nothing to hover with on a touch screen: the link is simply there, at the rule's weight */
+@media (hover: none) {
+  .doc .anchor {
+    opacity: 1;
+  }
+}
+
 .prose strong {
   font-weight: 600;
   color: var(--ink);
