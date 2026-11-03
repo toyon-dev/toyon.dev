@@ -6,8 +6,9 @@
 // beside the app and take its own dark theme (style.css, `.dark`). public/ is copied over as it is.
 //
 //   bun build.ts            build once
-//   bun build.ts --serve    build, rebuild as src/ and public/ change, and serve dist/ on $PORT
-//                           (what the Toyon preview runs)
+//   bun build.ts --serve    build, rebuild as src/, public/ or this file change, and serve dist/
+//                           on $PORT (what the Toyon preview runs)
+//   bun build.ts --again    build without clearing dist/ first (what --serve runs on a change)
 
 import { cp, mkdir, readdir, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { join, resolve, sep } from "node:path";
@@ -22,7 +23,13 @@ const ORDER = ["install", "settings", "preview", "agents", "remote", "trust", "p
 const REPO = "https://github.com/toyon-dev/toyon/blob/main/docs/";
 const RAW = "https://raw.githubusercontent.com/toyon-dev/toyon/main/docs/";
 
-const part = (page: string, tag: string) => page.match(new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`))?.[1].replace(/^\n+|\n+$/g, "") ?? "";
+// a page's <head> or <body>, less its comments: like the stylesheet's, they are for whoever
+// edits the page, not the visitor
+const part = (page: string, tag: string) =>
+  page
+    .match(new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`))?.[1]
+    .replace(/[ \t]*<!--[\s\S]*?-->\n?/g, "")
+    .replace(/^\n+|\n+$/g, "") ?? "";
 const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!);
 // a paragraph of markdown as plain words, for a meta description or an index line
 const plain = (md: string) => md.replace(/`/g, "").replace(/\[([^\]]+)\]\([^)]*\)/g, "$1").replace(/\*+/g, "").replace(/\s+/g, " ").trim();
@@ -138,26 +145,34 @@ ${index.join("\n")}
   await writeFile(join(OUT, DOCS, "index.html"), render(head, body, "dark"));
 }
 
+const SELF = import.meta.path;
 if (!process.argv.includes("--serve")) {
-  await rm(OUT, { recursive: true, force: true });
+  if (!process.argv.includes("--again")) await rm(OUT, { recursive: true, force: true });
   await build();
 } else {
   await build();
   // A poll of the sources' mtimes rather than fs.watch: a dozen files, and it works the same
-  // everywhere, sandboxes included.
+  // everywhere, sandboxes included. This file counts as a source too, and a change runs the
+  // build as a fresh process, since the one here keeps the code it started with: a serve left
+  // running across an edit to the renderer would otherwise keep writing the old pages over the
+  // new ones every time a source moved.
   const stamp = async () => {
-    let sum = 0;
+    let sum = (await stat(SELF)).mtimeMs;
     for (const dir of [SRC, PUBLIC]) {
       for (const f of await readdir(dir, { recursive: true })) sum += (await stat(join(dir, f))).mtimeMs;
     }
     return sum;
   };
   let last = await stamp();
+  let building = false;
   setInterval(async () => {
     const now = await stamp();
-    if (now === last) return;
+    if (now === last || building) return;
     last = now;
-    await build().catch(console.error);
+    building = true;
+    const run = Bun.spawn(["bun", SELF, "--again"], { stdout: "inherit", stderr: "inherit" });
+    if ((await run.exited) !== 0) console.error("build failed");
+    building = false;
   }, 300);
   const root = resolve(OUT);
   const server = Bun.serve({
