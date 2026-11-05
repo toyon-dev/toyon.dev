@@ -249,14 +249,20 @@ footer a:hover {
 }
 
 /* The one link off the page is the GitHub mark, kept small and at the rule's weight so it only
-   hints that it is there; under the pointer it firms up to the second ink, never the berry. */
+   hints that it is there; under the pointer it firms up to the second ink, never the berry.
+   The mark sits centred on a line of the links' text, and the link keeps that line (the strut
+   of its own font, 1lh tall) around the mark so it has the same baseline as the Docs link. On
+   the docs pages, where build.ts drops that link, the nav then still aligns the mark's line to
+   the wordmark's baseline; an icon alone would be aligned by its bottom edge and jump up. */
 .nav .github {
   display: block;
   color: var(--line);
 }
 
 .nav .github svg {
-  display: block;
+  display: inline-block;
+  vertical-align: top;
+  margin-top: calc((1lh - 1rem) / 2);
   width: 1rem;
   height: 1rem;
   fill: currentColor;
@@ -454,11 +460,27 @@ section {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2rem var(--gutter);
-  align-items: start;
+}
+
+/* The columns are the same height, and each one's link sits on the bottom edge, so the two links
+   share a line whatever the words above them wrap to: the left has a code block the right has not,
+   so their text alone never comes out even. */
+.run > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.run > div > .note:last-child {
+  margin-top: auto;
 }
 
 .run pre {
   margin-bottom: 1rem;
+}
+
+/* The three agents are one item: the line breaks before the list, never inside it. */
+.run .agents {
+  white-space: nowrap;
 }
 
 /* Both columns in the same small sans, so they sit at a similar height. */
