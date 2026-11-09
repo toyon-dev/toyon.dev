@@ -54,7 +54,10 @@
 
   --face-display: "Newsreader", Georgia, "Times New Roman", serif;
   --face-ui: -apple-system, "Segoe UI", sans-serif;
-  --face-mono: "Toyon Mono", ui-monospace, "SF Mono", Menlo, "DejaVu Sans Mono", monospace;
+  /* The fallbacks are Toyon Mono's own family (Menlo is DejaVu Sans Mono with Apple's tweaks, DejaVu
+     is Vera), the same cell and x-height, so the swap once the woff2 arrives moves nothing. SF Mono
+     shares the cell but not the x-height and reflowed every line. */
+  --face-mono: "Toyon Mono", Menlo, "DejaVu Sans Mono", "Bitstream Vera Sans Mono", monospace;
 
   /* Three widths and no others. The column holds everything and sets the one
      left edge; the measure caps prose inside it; the wide width is for the
