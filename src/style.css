@@ -18,20 +18,24 @@
   src: url("/fonts/newsreader-latin-opsz-400.woff2") format("woff2");
 }
 
+/* Toyon Mono, the app's own mono face: Bitstream Vera Sans Mono by way of Hack, built by rule in
+   the toyon-mono-font repository (its licences are in LICENSE-toyon-mono.md beside the files).
+   Regular and Bold only; nothing here asks the mono for another weight. The files carry a date
+   because /fonts/ is cached for a year as immutable: a new build is a new name. */
 @font-face {
   font-family: "Toyon Mono";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("/fonts/toyon-mono-regular.woff2") format("woff2");
+  src: url("/fonts/toyon-mono-regular-2026-11.woff2") format("woff2");
 }
 
 @font-face {
   font-family: "Toyon Mono";
   font-style: normal;
-  font-weight: 500;
+  font-weight: 700;
   font-display: swap;
-  src: url("/fonts/toyon-mono-medium.woff2") format("woff2");
+  src: url("/fonts/toyon-mono-bold-2026-11.woff2") format("woff2");
 }
 
 :root {
