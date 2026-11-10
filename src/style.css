@@ -27,7 +27,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("/fonts/toyon-mono-regular-2026-11b.woff2") format("woff2");
+  src: url("/fonts/toyon-mono-regular-2026-11c.woff2") format("woff2");
 }
 
 @font-face {
@@ -35,7 +35,7 @@
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url("/fonts/toyon-mono-bold-2026-11b.woff2") format("woff2");
+  src: url("/fonts/toyon-mono-bold-2026-11c.woff2") format("woff2");
 }
 
 :root {
