@@ -20,6 +20,19 @@ const OUT = "dist";
 const DOCS = "docs";
 // the docs' reading order on the index; anything not named follows, alphabetically
 const ORDER = ["install", "settings", "preview", "agents", "remote", "trust", "policy"];
+// The line under each doc's title on the index. A doc's own opening is written for someone
+// already on the page; this one is for someone choosing a page, so it names what they would come
+// looking for. A doc with no line here (one just synced from the Toyon repository) shows its
+// first sentence until it is given one.
+const LINES: Record<string, string> = {
+  install: "Requirements, updates and uninstalling.",
+  settings: "How your app is set up, run and checked: commands, ports, a database per copy.",
+  preview: "What the agent sees of your page, and how the picker works.",
+  agents: "Claude Code, Codex and OpenCode, compared.",
+  remote: "Run it on Fly or your own box; open it from your phone.",
+  trust: "The sandbox, permission modes and what an agent can still reach. No telemetry.",
+  policy: "What IT can turn off on a company machine.",
+};
 const REPO = "https://github.com/toyon-dev/toyon/blob/main/docs/";
 const RAW = "https://raw.githubusercontent.com/toyon-dev/toyon/main/docs/";
 
@@ -148,7 +161,8 @@ async function docs(render: (head: string, body: string, scheme: "dark") => stri
     const up = `    <a class="up" href="/${DOCS}/"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.5 3.5 5 8l4.5 4.5M5 8h8"/></svg>Docs</a>\n`;
     const body = `  <main class="prose doc">\n${up}${marked.parser(tokens)}  </main>\n${SCRIPT}`;
     await writeFile(join(OUT, DOCS, `${name}.html`), render(head, body, "dark"));
-    index.push(`      <li><a href="/${DOCS}/${name}">${esc(title)}</a> <span>${esc(sentences(text, 1))}</span></li>`);
+    if (!LINES[name]) console.warn(`docs index: no line for ${name}; showing its first sentence`);
+    index.push(`      <li><a href="/${DOCS}/${name}">${esc(title)}</a> <span>${esc(LINES[name] ?? sentences(text, 1))}</span></li>`);
   }
   const head = `  <title>Docs: Toyon</title>\n  <meta name="description" content="Installing Toyon, and what it reads, runs and refuses: the settings file, the preview, the agents, running it off your laptop, trust and policy.">`;
   // the list is the page; the title is for the outline and a screen reader, not the eye

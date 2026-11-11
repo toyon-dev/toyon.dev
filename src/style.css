@@ -665,8 +665,8 @@ section {
   padding-right: 0;
 }
 
-/* The docs index: no title to the eye, just each doc's title in the reading face with its first
-   sentence under it, starting on the line where a doc's way up sits. A list of one-line
+/* The docs index: no title to the eye, just each doc's title in the reading face with its line
+   (build.ts, LINES) under it, starting on the line where a doc's way up sits. A list of one-line
    summaries reads better short of the measure. */
 .prose .docs {
   max-width: 32rem;
