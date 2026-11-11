@@ -18,8 +18,16 @@ const SRC = "src";
 const PUBLIC = "public";
 const OUT = "dist";
 const DOCS = "docs";
-// the docs' reading order on the index; anything not named follows, alphabetically
-const ORDER = ["install", "using", "features", "settings", "backends", "commands", "preview", "agents", "phone", "remote", "trust", "policy"];
+// The docs' reading order on the index, in the groups it is drawn in: a dozen titles in one list
+// give the page to start on the weight of the one for IT. Anything not named (a doc just synced
+// from the Toyon repository) follows in a last group, alphabetically, until it is given a place.
+const GROUPS: [label: string, names: string[]][] = [
+  ["Start", ["install", "using", "features"]],
+  ["Your project", ["settings", "backends", "commands", "preview", "agents"]],
+  ["Access and security", ["phone", "remote", "trust", "policy"]],
+];
+const REST = "More";
+const ORDER = GROUPS.flatMap(([, names]) => names);
 // The line under each doc's title on the index. A doc's own opening is written for someone
 // already on the page; this one is for someone choosing a page, so it names what they would come
 // looking for: a list of what is on the page, not a sentence about it. It is inline markdown, so
@@ -39,6 +47,9 @@ const LINES: Record<string, string> = {
   trust: "The sandbox, permission modes, what an agent can still reach, telemetry.",
   policy: "What IT can turn off on a company machine.",
 };
+// A doc's title on the index, where its own says more than a row of the list needs: the line
+// beside it carries the rest.
+const TITLES: Record<string, string> = { backends: "Backends", phone: "Phone", remote: "Hosting", policy: "Policy" };
 // A doc that reads as part of another one: it is left off the index, and its way up is the doc
 // it belongs to. The Toyon repository keeps its docs in one flat folder, so the tree is named here.
 const UNDER: Record<string, string> = { shortcuts: "features" };
@@ -230,7 +241,7 @@ async function docs(render: (head: string, body: string, scheme: "dark") => stri
     .map((n) => n.slice(0, -3))
     .sort((a, b) => (ORDER.indexOf(a) + 1 || Infinity) - (ORDER.indexOf(b) + 1 || Infinity) || a.localeCompare(b));
   await mkdir(join(OUT, DOCS), { recursive: true });
-  const index: string[] = [];
+  const index = new Map<string, string>();
   for (const name of names) {
     slugs = new Set();
     heads = [];
@@ -251,15 +262,16 @@ async function docs(render: (head: string, body: string, scheme: "dark") => stri
     await writeFile(join(OUT, DOCS, `${name}.html`), render(head, body, "dark"));
     if (parent) continue;
     if (!LINES[name]) console.warn(`docs index: no line for ${name}; showing its first sentence`);
-    index.push(`      <li><a href="/${DOCS}/${name}">${esc(title)}</a> <span>${LINES[name] ? marked.parseInline(LINES[name]) : esc(sentences(text, 1))}</span></li>`);
+    index.set(name, `      <li><a href="/${DOCS}/${name}">${esc(TITLES[name] ?? title)}</a> <span>${LINES[name] ? marked.parseInline(LINES[name]) : esc(sentences(text, 1))}</span></li>`);
   }
+  const groups = [...GROUPS, [REST, [...index.keys()].filter((n) => !ORDER.includes(n))] as const]
+    .map(([label, group]) => [label, group.flatMap((n) => index.get(n) ?? [])] as const)
+    .filter(([, rows]) => rows.length);
   const head = `  <title>Docs: Toyon</title>\n  <meta name="description" content="Toyon docs: install, using, features, settings, backends, commands, preview, agents, phone and other devices, your own server, trust, managed policy.">`;
-  // the list is the page; the title is for the outline and a screen reader, not the eye
+  // the lists are the page; the title is for the outline and a screen reader, not the eye
   const body = `  <main class="prose index">
     <h1 class="sr-only">Docs</h1>
-    <ul class="docs">
-${index.join("\n")}
-    </ul>
+${groups.map(([label, rows]) => `    <h2>${esc(label)}</h2>\n    <ul class="docs">\n${rows.join("\n")}\n    </ul>`).join("\n")}
   </main>`;
   await writeFile(join(OUT, DOCS, "index.html"), render(head, body, "dark"));
 }

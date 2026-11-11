@@ -698,34 +698,70 @@ section {
   padding-right: 0;
 }
 
-/* The docs index: no title to the eye, just each doc's title in the reading face with its line
-   (build.ts, LINES) under it, starting on the line where a doc's way up sits. A list of one-line
-   summaries reads better short of the measure. */
+/* The docs index: no title to the eye. Each group (build.ts, GROUPS) is named in the reading
+   face at a doc's section size. The first starts the page as a doc's title does, and the two
+   lines' leading happens to set their capitals' tops level, so the words start at one height
+   from the index to a page. Under it each doc is one row, as a row of the docs' own tables is
+   set: its title in the sans at the first ink, then its line (build.ts, LINES) at the second,
+   in two columns so the titles read down as a list of contents. The title column is as wide as
+   the longest title; the lines run past the measure rather than wrap under it. */
 .prose .docs {
-  max-width: 32rem;
+  max-width: none;
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
 .prose .docs li {
-  margin-bottom: 1.25rem;
+  display: grid;
+  grid-template-columns: 6.25rem 1fr;
+  column-gap: 1.25rem;
+  align-items: baseline;
+  margin-bottom: 0.5rem;
 }
 
 .prose .docs a {
-  font-family: var(--face-display);
-  font-size: 1.25rem;
+  justify-self: start;
+  font-weight: 500;
   color: var(--ink);
 }
 
-.prose .docs span {
-  display: block;
+/* the space above a group's name parts it from the group before; the last row's own margin
+   collapses into it */
+.index h2 {
+  margin: 0 0 0.75rem;
+}
+
+.index .docs + h2 {
+  margin-top: 2.5rem;
+}
+
+/* no room for two columns: the line goes under its title, and the rows stand a little apart */
+@media (max-width: 40rem) {
+  .prose .docs li {
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .prose .docs span {
+    display: block;
+  }
 }
 
 /* The way up from a doc: the section's name above the title, in the sans at the second ink,
    with a drawn arrow held at the rule's weight like the GitHub mark. It is named for where it
-   goes rather than "back", since the visitor may have arrived from the app or a search. */
+   goes rather than "back", since the visitor may have arrived from the app or a search. It
+   stands in the space above the page rather than at its top, so the title under it starts where
+   the index's first group does, and its arrow hangs in the margin, by its own width and the gap,
+   so the word starts on the page's left edge. */
+.doc {
+  position: relative;
+}
+
 .doc .up {
+  position: absolute;
+  bottom: 100%;
+  left: -1.25rem;
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
@@ -743,6 +779,13 @@ section {
   stroke-width: 1.5;
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+
+/* on a phone there is no margin to hang in: the arrow leads the word from the left edge */
+@media (max-width: 40rem) {
+  .doc .up {
+    left: 0;
+  }
 }
 
 .doc .up:hover {
