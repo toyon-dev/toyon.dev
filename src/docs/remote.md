@@ -1,6 +1,6 @@
 # Your own server
 
-Toyon can run on a server instead of your laptop, and keep working with the laptop closed. Toyon has no servers of its own, so nothing passes through one. These setups are new; what has been tested is listed at the end.
+Run Toyon on a server to keep it working when your laptop is closed. There is no hosted Toyon service, and your code and keys are never sent to Toyon. These setups are new: see [What has been tested](#what-has-been-tested).
 
 To open Toyon from a phone or another computer, see [phone.md](phone.md).
 
@@ -27,15 +27,15 @@ Serverless hosts, and hosts that scale to zero with no disk, do not work.
 
    ```
    toyon.example.com, *.toyon.example.com {
-   	tls {
-   		dns cloudflare {env.CF_API_TOKEN}
-   	}
-   	reverse_proxy 127.0.0.1:4141
+       tls {
+           dns cloudflare {env.CF_API_TOKEN}
+       }
+       reverse_proxy 127.0.0.1:4141
    }
    ```
 
 - The wildcard certificate needs Caddy's DNS challenge, built with your DNS provider's module. The example uses Cloudflare's.
-- Each copy's preview gets its own subdomain, so each has its own cookies.
+- Each copy's preview gets a separate subdomain and separate cookies.
 - The setting takes effect at once.
 
 ## Tailscale, with no domain
@@ -86,9 +86,9 @@ Cost and limits:
 
 - The machine measured about $4-6 a month in ordinary use and $10-11 running all month, volume included. Agent usage is extra.
 - It stops when idle. An open Toyon tab keeps it running.
-- The volume has the only copy of anything you have not pushed.
+- Work you have not pushed exists only on the volume.
 - Code you run on it can read the Anthropic key or the Claude login, as it can on your laptop.
-- The first message waits while the agents install.
+- The first message is delayed while the agents install.
 - flyctl warns that some preview ports have nothing listening. This is expected: a port gets a listener when a copy uses it.
 - The first deploy after an app is created can fail with "unauthorized". Run `up` again.
 
@@ -111,15 +111,15 @@ A host with one public port needs your own wildcard domain and the `w{id}` form.
 
 ## Security
 
-- The link contains the token, and the token gives a shell on that machine. Do not share it.
+- Anyone with the link has shell access to the machine. Do not share it.
 - Toyon still listens on loopback only. A reverse proxy on the same machine accepts one hostname, over https only. On Fly, Fly's proxy does this.
 - A name typed without `https://` is redirected to https. The token in the link stays in the browser during the redirect.
 - A preview reached through the hostname also needs a cookie that Toyon's page is given. The dev server behind the preview never sees that cookie.
 
-What Toyon refuses, what the sandbox denies, how tokens are stored and what leaves the machine are in [trust.md](trust.md).
+See [trust.md](trust.md) for the sandbox, the tokens and the network traffic.
 
 ## What has been tested
 
-- **Fly.** A browser opened Toyon and two copies' previews. An agent's edit appeared in a preview without a reload. Every refusal was checked from outside.
+- **Fly.** A browser opened Toyon and two copies' previews. An agent's edit appeared in a preview without a reload. Requests that should be refused were tested from outside the machine.
 - **Tailscale.** A phone opened Toyon and a preview, and an agent's edit appeared without a reload.
 - **Caddy.** Checked with requests shaped like Caddy's. Not opened from a phone yet.

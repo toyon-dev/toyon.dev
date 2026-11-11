@@ -544,6 +544,16 @@ section {
   margin: 1.5rem 0 0.5rem;
 }
 
+/* A heading that is a literal name (a key, a tool, a command) is drawn as the app's own markdown
+   draws it (the shell's .md-preview). The second level is set in size, so its code keeps the
+   chip's proportion and the mono's own weight. The third sits barely above the body and is
+   marked by the reading face, which a code span leaves: there the mono takes its Bold, a cut the
+   site serves, so a heading that is only a name does not read as a chip left between two
+   paragraphs. */
+.prose h3 code {
+  font-weight: 700;
+}
+
 /* A section's link hangs in the margin left of its heading, at the rule's weight like the GitHub
    mark, and only while the heading is under the pointer or the link has focus. A deep link
    stops a little short of the top so the heading is not pressed against the edge. */
