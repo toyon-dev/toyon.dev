@@ -71,7 +71,7 @@ To keep a change, press land or type `/land`. Land merges the chat's branch into
 
 ## Shortcuts
 
-Press <kbd>⌘,</kbd> for the full list.
+Press <kbd>⌘,</kbd> for the full list. What else Toyon does is in [features.md](features.md), and each feature with its shortcut is in [shortcuts.md](shortcuts.md).
 
 ## Disk
 

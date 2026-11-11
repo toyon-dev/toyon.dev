@@ -28,7 +28,7 @@ const ORDER = ["install", "using", "features", "settings", "backends", "commands
 const LINES: Record<string, string> = {
   install: "Requirements, updates and uninstalling.",
   using: "Chats, the preview, permission modes and landing.",
-  features: "What Toyon does automatically, and every feature with its shortcut.",
+  features: "Search, the editor, pull requests, and what Toyon does on its own.",
   settings: "The settings file: setup, run, check, land and ports.",
   backends: "Sharing a backend between chats, and a database per chat.",
   commands: "Every `toyon` command.",
@@ -39,6 +39,9 @@ const LINES: Record<string, string> = {
   trust: "The sandbox, permission modes, what an agent can still reach, telemetry.",
   policy: "What IT can turn off on a company machine.",
 };
+// A doc that reads as part of another one: it is left off the index, and its way up is the doc
+// it belongs to. The Toyon repository keeps its docs in one flat folder, so the tree is named here.
+const UNDER: Record<string, string> = { shortcuts: "features" };
 const REPO = "https://github.com/toyon-dev/toyon/blob/main/docs/";
 const RAW = "https://raw.githubusercontent.com/toyon-dev/toyon/main/docs/";
 
@@ -214,6 +217,12 @@ const SCRIPT = `  <script>
     }
   </script>`;
 
+// a doc's title is its first heading, or its file name when it has none
+const titleOf = (tokens: Token[], name: string) => {
+  const heading = tokens.find((t) => t.type === "heading" && t.depth === 1);
+  return heading?.type === "heading" ? plain(heading.text) : name;
+};
+
 async function docs(render: (head: string, body: string, scheme: "dark") => string) {
   const dir = join(SRC, DOCS);
   const names = ((await readdir(dir).catch(() => [])) as string[])
@@ -227,17 +236,20 @@ async function docs(render: (head: string, body: string, scheme: "dark") => stri
     heads = [];
     const tokens = marked.lexer(await readFile(join(dir, `${name}.md`), "utf8"));
     marked.walkTokens(tokens, relink);
-    const heading = tokens.find((t) => t.type === "heading" && t.depth === 1);
     const lede = tokens.find((t) => t.type === "paragraph");
-    const title = heading?.type === "heading" ? plain(heading.text) : name;
+    const title = titleOf(tokens, name);
     const text = lede?.type === "paragraph" ? plain(lede.text) : "";
     const head = `  <title>${esc(title)}: Toyon</title>\n  <meta name="description" content="${esc(sentences(text, 120))}">`;
-    // the way up to the index sits above the title, named for where it goes rather than "back"
-    const up = `    <a class="up" href="/${DOCS}/"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.5 3.5 5 8l4.5 4.5M5 8h8"/></svg>Docs</a>\n`;
+    const parent = names.includes(UNDER[name] ?? "") ? UNDER[name] : undefined;
+    const above = parent ? titleOf(marked.lexer(await readFile(join(dir, `${parent}.md`), "utf8")), parent) : "Docs";
+    // the way up sits above the title, named for where it goes rather than "back": the index,
+    // or the doc this one is under
+    const up = `    <a class="up" href="/${DOCS}/${parent ?? ""}"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.5 3.5 5 8l4.5 4.5M5 8h8"/></svg>${esc(above)}</a>\n`;
     const html = marked.parser(tokens);
     // ahead of the page in the source, so the keyboard reaches the contents before the text
     const body = `${outline()}  <main class="prose doc">\n${up}${html}  </main>\n${SCRIPT}`;
     await writeFile(join(OUT, DOCS, `${name}.html`), render(head, body, "dark"));
+    if (parent) continue;
     if (!LINES[name]) console.warn(`docs index: no line for ${name}; showing its first sentence`);
     index.push(`      <li><a href="/${DOCS}/${name}">${esc(title)}</a> <span>${LINES[name] ? marked.parseInline(LINES[name]) : esc(sentences(text, 1))}</span></li>`);
   }
