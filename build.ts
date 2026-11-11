@@ -81,16 +81,46 @@ const slug = (text: string) => {
   slugs.add(id);
   return id;
 };
+// the headings of the doc being rendered, in the order they are drawn, for its outline
+let heads: { level: number; id: string; text: string }[] = [];
 const marked = new Marked({
   renderer: {
     heading({ tokens, depth, text }) {
       const inner = this.parser.parseInline(tokens);
+      const id = depth === 1 ? "" : slug(text);
+      heads.push({ level: depth, id, text: plain(text) });
       if (depth === 1) return `<h1>${inner}</h1>\n`;
-      const id = slug(text);
       return `<h${depth} id="${id}">${inner}<a class="anchor" href="#${id}" aria-label="Link to this section">${LINK}</a></h${depth}>\n`;
     },
   },
 });
+// A doc's outline, the one the app draws beside a document (shell ui/Document.tsx): a strip of
+// ticks in the left margin, one per heading and as wide as its level is high, which opens into
+// the titles under the pointer. The titles are the sections' own links, so they work with no
+// script, and the keyboard and a screen reader get them as a list of contents; the ticks are
+// only the picture of it. A title steps in once per open heading of a lower level above it, as
+// the shell's outlineDepths counts: the doc's title opens none, so an h2 stands at the margin
+// and an h3 under it is one step in. The title's own link is the top of the page.
+const outline = () => {
+  // an outline of one heading says nothing the title does not
+  if (heads.length < 2) return "";
+  const open: number[] = [];
+  const ticks: string[] = [];
+  const rows: string[] = [];
+  for (const { level, id, text } of heads) {
+    while (open.length && open.at(-1)! >= level) open.pop();
+    const depth = level === 1 ? 0 : open.length;
+    if (level > 1) open.push(level);
+    ticks.push(`<span data-level="${level}"></span>`);
+    rows.push(`      <li><a href="#${id}" data-level="${level}"${depth ? ` style="--depth: ${depth}"` : ""}>${esc(text)}</a></li>`);
+  }
+  return `  <nav class="outline" aria-label="Sections">
+    <div class="ticks" aria-hidden="true">${ticks.join("")}</div>
+    <ol>
+${rows.join("\n")}
+    </ol>
+  </nav>\n`;
+};
 
 async function build() {
   const layout = await readFile(join(SRC, "layout.html"), "utf8");
@@ -124,19 +154,54 @@ async function build() {
 // section's link is still the link (the fragment lands in the address bar, and a modifier or
 // the middle button opens it wherever they would) and also puts the whole address on the
 // clipboard, the glyph turning into a check for a moment to say so. Where the clipboard is
-// refused, the link alone remains.
+// refused, the link alone remains. The outline marks the section being read, on its tick and
+// on its title: the last heading to have reached the top edge, counted as reached a little
+// under it so the one just jumped to is the one marked, and the last heading of all once the
+// page is at its end, where a short last section never gets that high. The title's link goes
+// to the top without leaving a bare # in the address.
 const SCRIPT = `  <script>
+    const plain = (e) => e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey;
     addEventListener("keyup", (e) => {
       if (e.key !== "Escape" || e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return;
       location.assign("/${DOCS}/");
     });
     for (const a of document.querySelectorAll(".anchor")) {
       a.addEventListener("click", (e) => {
-        if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        if (!plain(e)) return;
         navigator.clipboard?.writeText(a.href).then(() => {
           a.classList.add("copied");
           setTimeout(() => a.classList.remove("copied"), 1200);
         }, () => {});
+      });
+    }
+    const outline = document.querySelector(".outline");
+    if (outline) {
+      const heads = document.querySelectorAll(".doc :is(h1, h2, h3, h4, h5, h6)");
+      const ticks = outline.querySelectorAll(".ticks span");
+      const rows = outline.querySelectorAll("a");
+      let at = -1;
+      let frame = 0;
+      const read = () => {
+        frame = 0;
+        let i = 0;
+        heads.forEach((h, k) => {
+          if (h.getBoundingClientRect().top <= 48) i = k;
+        });
+        if (scrollY > 0 && scrollY + innerHeight >= document.documentElement.scrollHeight - 1) i = heads.length - 1;
+        if (i === at) return;
+        ticks[at]?.classList.remove("current");
+        rows[at]?.removeAttribute("aria-current");
+        at = i;
+        ticks[at]?.classList.add("current");
+        rows[at]?.setAttribute("aria-current", "true");
+      };
+      addEventListener("scroll", () => (frame ||= requestAnimationFrame(read)), { passive: true });
+      read();
+      rows[0]?.addEventListener("click", (e) => {
+        if (!plain(e) || rows[0].getAttribute("href") !== "#") return;
+        e.preventDefault();
+        scrollTo({ top: 0 });
+        history.replaceState(null, "", location.pathname + location.search);
       });
     }
   </script>`;
@@ -151,6 +216,7 @@ async function docs(render: (head: string, body: string, scheme: "dark") => stri
   const index: string[] = [];
   for (const name of names) {
     slugs = new Set();
+    heads = [];
     const tokens = marked.lexer(await readFile(join(dir, `${name}.md`), "utf8"));
     marked.walkTokens(tokens, relink);
     const heading = tokens.find((t) => t.type === "heading" && t.depth === 1);
@@ -160,7 +226,9 @@ async function docs(render: (head: string, body: string, scheme: "dark") => stri
     const head = `  <title>${esc(title)}: Toyon</title>\n  <meta name="description" content="${esc(sentences(text, 120))}">`;
     // the way up to the index sits above the title, named for where it goes rather than "back"
     const up = `    <a class="up" href="/${DOCS}/"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.5 3.5 5 8l4.5 4.5M5 8h8"/></svg>Docs</a>\n`;
-    const body = `  <main class="prose doc">\n${up}${marked.parser(tokens)}  </main>\n${SCRIPT}`;
+    const html = marked.parser(tokens);
+    // ahead of the page in the source, so the keyboard reaches the contents before the text
+    const body = `${outline()}  <main class="prose doc">\n${up}${html}  </main>\n${SCRIPT}`;
     await writeFile(join(OUT, DOCS, `${name}.html`), render(head, body, "dark"));
     if (!LINES[name]) console.warn(`docs index: no line for ${name}; showing its first sentence`);
     index.push(`      <li><a href="/${DOCS}/${name}">${esc(title)}</a> <span>${esc(LINES[name] ?? sentences(text, 1))}</span></li>`);

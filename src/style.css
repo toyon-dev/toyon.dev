@@ -720,6 +720,136 @@ section {
   stroke: var(--ink-2);
 }
 
+/* A doc's outline (build.ts, outline), the app's own: a strip of ticks that holds still at the
+   middle of the window's height while the page moves beside it, one tick per heading and as wide
+   as its level is high, the section being read in the first ink. It stands at the window's left
+   edge, where the app's stands at the pane's, so the titles it opens into lie in the margin and
+   not over the text wherever the window leaves a margin. Where the gutter is all there is, it
+   gives up its own inset to keep clear of the column. */
+.outline {
+  position: fixed;
+  z-index: 1;
+  top: 50%;
+  left: clamp(0px, calc(var(--gutter) - 2rem), 8px);
+  translate: 0 -50%;
+  font-family: var(--face-ui);
+}
+
+/* the padding is hit area: a 2px tick is nothing to point at */
+.outline .ticks {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: calc(100vh - 24px);
+  overflow: hidden;
+  padding: 8px 6px;
+}
+
+.outline .ticks span {
+  flex: none;
+  width: 6px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--line);
+}
+
+.outline .ticks [data-level="1"] {
+  width: 18px;
+}
+
+.outline .ticks [data-level="2"] {
+  width: 13px;
+}
+
+.outline .ticks [data-level="3"] {
+  width: 9px;
+}
+
+.outline .ticks .current {
+  background: var(--ink);
+}
+
+/* The titles in the strip's place: the app's menu box, laid over the ticks so the pointer that
+   opened it is already inside. It is there all along and only unseen, so the keyboard can
+   reach a title, which shows the box; a click's focus does not hold it open once the pointer
+   has left. A contents page carries no ticks of its own: the indent alone says the level. */
+.outline ol {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  translate: 0 -50%;
+  width: max-content;
+  max-width: 18rem;
+  max-height: calc(100vh - 16px);
+  overflow: hidden auto;
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+  background: var(--code-bg);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  box-shadow: 0 6px 20px rgb(0 0 0 / 0.3);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.outline:hover ol,
+.outline:has(:focus-visible) ol {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.outline a {
+  display: block;
+  padding: 0.15rem 0.55rem 0.15rem calc(0.55rem + var(--depth, 0) * 1rem);
+  overflow: hidden;
+  font-size: 0.72rem; /* the app's 13px */
+  line-height: 1.5;
+  color: var(--ink-2);
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* the doc's title is the one row read first; weight says so, not an indent under it */
+.outline a[data-level="1"] {
+  font-weight: 600;
+}
+
+.outline a:hover,
+.outline a[aria-current] {
+  color: var(--ink);
+}
+
+.outline a:hover {
+  background: var(--rule);
+}
+
+/* a row fills the box, so its ring sits inside its band rather than on the box's border */
+.outline a:focus-visible {
+  outline-offset: -2px;
+}
+
+/* no gutter to stand in on a phone, and nothing to point with on a touch screen: the headings
+   and their links are the way around there */
+@media (max-width: 40rem), (hover: none) {
+  .outline {
+    display: none;
+  }
+}
+
+/* Short of a margin wide enough for both, the outline has it and a section's link follows its
+   heading's words instead. On a phone there is no margin at all. */
+@media (max-width: 40rem), (hover: hover) and (max-width: 72rem) {
+  .doc .anchor {
+    position: static;
+    display: inline-block;
+    margin-left: 0.4rem;
+    translate: 0;
+    vertical-align: -0.1em;
+  }
+}
+
 /* Footer */
 
 footer {
@@ -771,15 +901,6 @@ footer a {
 
   .prose {
     margin-top: 3rem;
-  }
-
-  /* no margin to hang in: the link follows the heading's words instead */
-  .doc .anchor {
-    position: static;
-    display: inline-block;
-    margin-left: 0.4rem;
-    translate: 0;
-    vertical-align: -0.1em;
   }
 
   .steps ul,
