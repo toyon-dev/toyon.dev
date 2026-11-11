@@ -645,6 +645,11 @@ section {
   margin: 0;
 }
 
+/* a step's code block, a little off the sentence it belongs to */
+.prose li pre {
+  margin-top: 0.5rem;
+}
+
 .prose pre {
   margin: 0 0 1rem;
   font-family: var(--face-mono);
