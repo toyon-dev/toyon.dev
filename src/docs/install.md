@@ -9,7 +9,7 @@ npx toyon
 
 Toyon opens in a browser tab. To install it as an app, press the install button in the top bar. This works in Chrome, Arc, Brave and Edge.
 
-What happens when it opens a project is in [project.md](project.md). To run it on your own server instead, see [remote.md](remote.md).
+How to use it is in [using.md](using.md). To run it on your own server instead, see [remote.md](remote.md).
 
 ## Requirements
 
