@@ -614,6 +614,23 @@ section {
   color: var(--ink);
 }
 
+/* A key, drawn as the app draws its key hints (the shell's .kbd-chip): the first ink on the code
+   ground, inside a line at the rule's colour. It is set in the sans, since the mono has no
+   ⌘ ⇧ ⌥ ⌃ and a fallback glyph never matches the letter beside it. An inline box's padding and
+   border paint outside its line without adding to it, so a line with a key in it is as tall as
+   one without. */
+.prose kbd {
+  padding: 0.1em 0.4em;
+  font-family: var(--face-ui);
+  font-size: 0.85em;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  color: var(--ink);
+  background: var(--code-bg);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+}
+
 .prose ul,
 .prose ol {
   margin: 0 0 1rem;
