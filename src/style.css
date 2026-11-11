@@ -549,8 +549,9 @@ section {
    chip's proportion and the mono's own weight. The third sits barely above the body and is
    marked by the reading face, which a code span leaves: there the mono takes its Bold, a cut the
    site serves, so a heading that is only a name does not read as a chip left between two
-   paragraphs. */
-.prose h3 code {
+   paragraphs. Only that heading (build.ts marks it `.name`): one that mentions a name among
+   words is marked by the words, and the reading face has no weight to set beside a Bold. */
+.prose h3.name code {
   font-weight: 700;
 }
 

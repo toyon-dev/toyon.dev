@@ -94,7 +94,10 @@ const marked = new Marked({
       const id = depth === 1 ? "" : slug(text);
       heads.push({ level: depth, id, text: plain(text) });
       if (depth === 1) return `<h1>${inner}</h1>\n`;
-      return `<h${depth} id="${id}">${inner}<a class="anchor" href="#${id}" aria-label="Link to this section">${LINK}</a></h${depth}>\n`;
+      // a heading that is one code span and nothing else is a literal name (a key, a tool, a
+      // command), which the stylesheet marks apart from a heading that only mentions one
+      const name = tokens.length === 1 && tokens[0].type === "codespan" ? ' class="name"' : "";
+      return `<h${depth} id="${id}"${name}>${inner}<a class="anchor" href="#${id}" aria-label="Link to this section">${LINK}</a></h${depth}>\n`;
     },
   },
 });
