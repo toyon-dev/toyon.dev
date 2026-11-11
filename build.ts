@@ -19,7 +19,7 @@ const PUBLIC = "public";
 const OUT = "dist";
 const DOCS = "docs";
 // the docs' reading order on the index; anything not named follows, alphabetically
-const ORDER = ["install", "using", "settings", "backends", "commands", "preview", "agents", "phone", "remote", "trust", "policy"];
+const ORDER = ["install", "using", "features", "settings", "backends", "commands", "preview", "agents", "phone", "remote", "trust", "policy"];
 // The line under each doc's title on the index. A doc's own opening is written for someone
 // already on the page; this one is for someone choosing a page, so it names what they would come
 // looking for: a list of what is on the page, not a sentence about it. It is inline markdown, so
@@ -28,6 +28,7 @@ const ORDER = ["install", "using", "settings", "backends", "commands", "preview"
 const LINES: Record<string, string> = {
   install: "Requirements, updates and uninstalling.",
   using: "Chats, the preview, permission modes and landing.",
+  features: "What Toyon does automatically, and every feature with its shortcut.",
   settings: "The settings file: setup, run, check, land and ports.",
   backends: "Sharing a backend between chats, and a database per chat.",
   commands: "Every `toyon` command.",
@@ -240,7 +241,7 @@ async function docs(render: (head: string, body: string, scheme: "dark") => stri
     if (!LINES[name]) console.warn(`docs index: no line for ${name}; showing its first sentence`);
     index.push(`      <li><a href="/${DOCS}/${name}">${esc(title)}</a> <span>${LINES[name] ? marked.parseInline(LINES[name]) : esc(sentences(text, 1))}</span></li>`);
   }
-  const head = `  <title>Docs: Toyon</title>\n  <meta name="description" content="Toyon docs: install, using, settings, backends, commands, preview, agents, phone and other devices, your own server, trust, managed policy.">`;
+  const head = `  <title>Docs: Toyon</title>\n  <meta name="description" content="Toyon docs: install, using, features, settings, backends, commands, preview, agents, phone and other devices, your own server, trust, managed policy.">`;
   // the list is the page; the title is for the outline and a screen reader, not the eye
   const body = `  <main class="prose index">
     <h1 class="sr-only">Docs</h1>
