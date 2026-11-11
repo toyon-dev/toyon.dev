@@ -22,17 +22,18 @@ const DOCS = "docs";
 const ORDER = ["install", "using", "settings", "commands", "preview", "agents", "remote", "trust", "policy"];
 // The line under each doc's title on the index. A doc's own opening is written for someone
 // already on the page; this one is for someone choosing a page, so it names what they would come
-// looking for. A doc with no line here (one just synced from the Toyon repository) shows its
-// first sentence until it is given one.
+// looking for: a list of what is on the page, not a sentence about it. It is inline markdown, so
+// a command is set as code the way the docs set it. A doc with no line here (one just synced
+// from the Toyon repository) shows its first sentence until it is given one.
 const LINES: Record<string, string> = {
   install: "Requirements, updates and uninstalling.",
   using: "Chats, the preview, permission modes and landing.",
-  settings: "How your app is set up, run and checked: commands, ports, a database per copy.",
-  commands: "Every toyon command.",
-  preview: "What the agent is told about the page, and how the picker finds a line.",
+  settings: "Setup, run and check commands, ports, a database per copy.",
+  commands: "Every `toyon` command.",
+  preview: "The picker, and what the agent is told about your page.",
   agents: "Claude Code, Codex and OpenCode, compared.",
-  remote: "Run it on Fly or your own box; open it from your phone.",
-  trust: "The sandbox, permission modes and what an agent can still reach. No telemetry.",
+  remote: "Fly, your own box, pairing a phone.",
+  trust: "The sandbox, permission modes, what an agent can still reach, telemetry.",
   policy: "What IT can turn off on a company machine.",
 };
 const REPO = "https://github.com/toyon-dev/toyon/blob/main/docs/";
@@ -232,9 +233,9 @@ async function docs(render: (head: string, body: string, scheme: "dark") => stri
     const body = `${outline()}  <main class="prose doc">\n${up}${html}  </main>\n${SCRIPT}`;
     await writeFile(join(OUT, DOCS, `${name}.html`), render(head, body, "dark"));
     if (!LINES[name]) console.warn(`docs index: no line for ${name}; showing its first sentence`);
-    index.push(`      <li><a href="/${DOCS}/${name}">${esc(title)}</a> <span>${esc(LINES[name] ?? sentences(text, 1))}</span></li>`);
+    index.push(`      <li><a href="/${DOCS}/${name}">${esc(title)}</a> <span>${LINES[name] ? marked.parseInline(LINES[name]) : esc(sentences(text, 1))}</span></li>`);
   }
-  const head = `  <title>Docs: Toyon</title>\n  <meta name="description" content="Installing Toyon, and what it reads, runs and refuses: the settings file, the preview, the agents, running it off your laptop, trust and policy.">`;
+  const head = `  <title>Docs: Toyon</title>\n  <meta name="description" content="Toyon docs: install, using, settings, commands, preview, agents, your own server, trust, managed policy.">`;
   // the list is the page; the title is for the outline and a screen reader, not the eye
   const body = `  <main class="prose index">
     <h1 class="sr-only">Docs</h1>
