@@ -19,7 +19,7 @@ const PUBLIC = "public";
 const OUT = "dist";
 const DOCS = "docs";
 // the docs' reading order on the index; anything not named follows, alphabetically
-const ORDER = ["install", "settings", "preview", "agents", "remote", "trust", "policy"];
+const ORDER = ["install", "settings", "commands", "preview", "agents", "remote", "trust", "policy"];
 // The line under each doc's title on the index. A doc's own opening is written for someone
 // already on the page; this one is for someone choosing a page, so it names what they would come
 // looking for. A doc with no line here (one just synced from the Toyon repository) shows its
@@ -27,6 +27,7 @@ const ORDER = ["install", "settings", "preview", "agents", "remote", "trust", "p
 const LINES: Record<string, string> = {
   install: "Requirements, updates and uninstalling.",
   settings: "How your app is set up, run and checked: commands, ports, a database per copy.",
+  commands: "Every toyon command.",
   preview: "What the agent sees of your page, and how the picker works.",
   agents: "Claude Code, Codex and OpenCode, compared.",
   remote: "Run it on Fly or your own box; open it from your phone.",
