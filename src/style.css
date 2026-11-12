@@ -675,16 +675,15 @@ section {
   tab-size: 4; /* the docs' Caddyfile is indented with tabs */
 }
 
-/* A table is the other thing allowed past the column, as the landing page's screenshot is: it
-   is as wide as its rows want, so a row is one line wherever the window has the room. It keeps
-   the text's left edge and runs right, no further than the screenshot's right edge, and never
-   into the gutter: the second term is the column plus the margin right of it. On a narrow
-   screen that is the column alone, and the table scrolls sideways rather than pushing the page
-   out. The rules run between rows only, in the page's rule colour. */
+/* A table is as wide as its rows want, past the measure and up to the column's right edge,
+   where the nav ends. No further: a cell holds sentences, and past the column a line of them
+   runs much longer than a paragraph's, which the screenshot on the landing page never has to
+   be read as. On a narrow screen it scrolls sideways rather than pushing the page out. The
+   rules run between rows only, in the page's rule colour. */
 .prose table {
   display: block;
   width: max-content;
-  max-width: min(calc((var(--col) + var(--col-wide)) / 2), calc(100% + (100vw - 100%) / 2 - var(--gutter)));
+  max-width: 100%;
   overflow-x: auto;
   margin: 0 0 1.5rem;
   border-collapse: collapse;
