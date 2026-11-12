@@ -36,7 +36,7 @@ const ORDER = GROUPS.flatMap(([, names]) => names);
 const LINES: Record<string, string> = {
   install: "Requirements, updates and uninstalling.",
   using: "Chats, the preview, permission modes and landing.",
-  features: "Search, the editor, pull requests, and what Toyon does on its own.",
+  features: "Splitting off work, pull requests, themes and automatic commit messages.",
   settings: "The settings file: setup, run, check, land and ports.",
   backends: "Sharing a backend between chats, and a database per chat.",
   commands: "Every `toyon` command.",
