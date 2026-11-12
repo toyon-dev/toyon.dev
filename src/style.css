@@ -533,15 +533,22 @@ section {
   margin-bottom: 1.5rem;
 }
 
+/* A section stands well clear of the one before, three and a half lines against the one between
+   paragraphs, so a page of text reads as parts and not as one column. A subsection takes two. */
 .prose h2 {
   font-size: 1.25rem;
-  margin: 2rem 0 0.5rem;
+  margin: 3.5rem 0 0.5rem;
 }
 
 .prose h3 {
   font-size: 1.05rem;
   font-weight: 400;
-  margin: 1.5rem 0 0.5rem;
+  margin: 2rem 0 0.5rem;
+}
+
+/* a subsection that opens its section belongs to the heading over it */
+.prose h2 + h3 {
+  margin-top: 1rem;
 }
 
 /* A heading that is a literal name (a key, a tool, a command) is drawn as the app's own markdown
@@ -748,52 +755,49 @@ section {
   }
 }
 
-/* The way up from a doc: the section's name above the title, in the sans at the second ink,
-   with a drawn arrow held at the rule's weight like the GitHub mark. It is named for where it
-   goes rather than "back", since the visitor may have arrived from the app or a search. It
-   stands in the space above the page rather than at its top, so the title under it starts where
-   the index's first group does, and its arrow hangs in the margin, by its own width and the gap,
-   so the word starts on the page's left edge. */
+/* The way up from a doc: a drawn arrow left of the title, held at the rule's weight like the
+   GitHub mark, with no word beside it (build.ts names it for a screen reader). It hangs in the
+   margin, by its own width and the gap, so the title starts on the page's left edge where the
+   index's first group does. Its box is as tall as the title's first line and reaches the title,
+   so the arrow sits at the line's middle and the whole of it is the target. */
 .doc {
   position: relative;
 }
 
 .doc .up {
   position: absolute;
-  bottom: 100%;
-  left: -1.25rem;
-  display: inline-flex;
+  top: 0;
+  left: -1.75rem;
+  display: flex;
   align-items: center;
-  gap: 0.4rem;
-  margin-bottom: 1.25rem;
-  font-family: var(--face-ui);
-  font-size: 0.85rem;
-  color: var(--ink-2);
+  width: 1.75rem;
+  height: 2.3rem; /* the title's line: 2rem at 1.15 */
+  color: var(--line);
 }
 
 .doc .up svg {
-  width: 0.85rem;
-  height: 0.85rem;
+  width: 1.1rem;
+  height: 1.1rem;
   fill: none;
-  stroke: var(--line);
+  stroke: currentColor;
   stroke-width: 1.5;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
-/* on a phone there is no margin to hang in: the arrow leads the word from the left edge */
+/* on a phone there is no margin to hang in: the arrow leads the title from the left edge */
 @media (max-width: 40rem) {
   .doc .up {
     left: 0;
   }
+
+  .doc .up + h1 {
+    padding-left: 1.75rem;
+  }
 }
 
 .doc .up:hover {
-  color: var(--ink);
-}
-
-.doc .up:hover svg {
-  stroke: var(--ink-2);
+  color: var(--ink-2);
 }
 
 /* A doc's outline (build.ts, outline), the app's own: a strip of ticks that holds still at the
