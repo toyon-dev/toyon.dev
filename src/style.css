@@ -675,10 +675,16 @@ section {
   tab-size: 4; /* the docs' Caddyfile is indented with tabs */
 }
 
-/* A table scrolls sideways on a narrow screen rather than pushing the page out. The rules
-   run between rows only, in the page's rule colour. */
+/* A table is the other thing allowed past the column, as the landing page's screenshot is: it
+   is as wide as its rows want, so a row is one line wherever the window has the room. It keeps
+   the text's left edge and runs right, no further than the screenshot's right edge, and never
+   into the gutter: the second term is the column plus the margin right of it. On a narrow
+   screen that is the column alone, and the table scrolls sideways rather than pushing the page
+   out. The rules run between rows only, in the page's rule colour. */
 .prose table {
   display: block;
+  width: max-content;
+  max-width: min(calc((var(--col) + var(--col-wide)) / 2), calc(100% + (100vw - 100%) / 2 - var(--gutter)));
   overflow-x: auto;
   margin: 0 0 1.5rem;
   border-collapse: collapse;
@@ -688,10 +694,24 @@ section {
 
 .prose th,
 .prose td {
-  padding: 0.5rem 1rem 0.5rem 0;
+  padding: 0.7rem 1rem 0.7rem 0;
   text-align: left;
   vertical-align: top;
   border-top: 1px solid var(--rule);
+}
+
+/* Where there is room, the columns stand further apart, and the first, the names the reader
+   scans down, keeps each name on one line. */
+@media (min-width: 40.01rem) {
+  .prose th,
+  .prose td {
+    padding-right: 2rem;
+  }
+
+  .prose th:first-child,
+  .prose td:first-child {
+    white-space: nowrap;
+  }
 }
 
 .prose th {
@@ -758,8 +778,10 @@ section {
 /* The way up from a doc: a drawn arrow left of the title, held at the rule's weight like the
    GitHub mark, with no word beside it (build.ts names it for a screen reader). It hangs in the
    margin, by its own width and the gap, so the title starts on the page's left edge where the
-   index's first group does. Its box is as tall as the title's first line and reaches the title,
-   so the arrow sits at the line's middle and the whole of it is the target. */
+   index's first group does. Its box is the title's first line, set in the title's own size and
+   leading, and reaches the title, so the whole of it is the target. The arrow stands on that
+   line's baseline and is raised to the middle of a capital, where the eye puts the middle of a
+   title: the middle of the line box is lower, by the room the line keeps for descenders. */
 .doc {
   position: relative;
 }
@@ -768,16 +790,19 @@ section {
   position: absolute;
   top: 0;
   left: -1.75rem;
-  display: flex;
-  align-items: center;
   width: 1.75rem;
-  height: 2.3rem; /* the title's line: 2rem at 1.15 */
+  font-size: 2rem;
+  line-height: 1.15;
   color: var(--line);
 }
 
 .doc .up svg {
   width: 1.1rem;
   height: 1.1rem;
+  /* half a capital up, less half the arrow; the first line is Newsreader's capital, for a
+     browser without the unit */
+  vertical-align: calc(0.33em - 0.55rem);
+  vertical-align: calc(0.5cap - 0.55rem);
   fill: none;
   stroke: currentColor;
   stroke-width: 1.5;

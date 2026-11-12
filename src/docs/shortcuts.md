@@ -1,6 +1,6 @@
 # Features and shortcuts
 
-Each feature with how to reach it. The short list, and what Toyon does on its own, is in [features.md](features.md).
+Each feature with how to reach it. The short list and the automatic features are in [features.md](features.md).
 
 ## Chat
 
@@ -32,12 +32,12 @@ Each feature with how to reach it. The short list, and what Toyon does on its ow
 | Jump to a file | <kbd>⌘P</kbd>. Changed files are listed first. |
 | Search in files | <kbd>⌘⇧F</kbd>. |
 | Files | <kbd>⌘⇧E</kbd>. Lists every file, ignored files included. Hover a file to outline what it draws in the preview. The menu adds a file to the chat, makes a new file, or asks the agent to rename or delete one. |
-| Changes | <kbd>⌘B</kbd>. Test files are listed separately, and a "last turn" section lists what the last turn changed. Shift-click selects several files to discard or add to the chat. |
+| Changes | <kbd>⌘B</kbd>. Test files are listed separately. A "last turn" section lists what the last turn changed. Shift-click selects several files to discard or add to the chat. |
 | History | The history tab of the same panel lists the branch's commits. A commit opens to its files. |
 | Panel tabs | <kbd>⌥→</kbd> and <kbd>⌥←</kbd> step through files, changes and history. In a field with text they stay the word jump. |
 | Editor | Saves when you stop typing; <kbd>⌘S</kbd> saves now. Shows who last changed the current line. Click that note to open the pull request or the commit. |
-| Diff | "split" or "inline" in the pane's header. A wrap toggle folds long lines. |
-| Markdown | Opens rendered, with an outline of its headings. A changed file marks what came and went, inline or split as the diff is. "plain" in the pane's header turns the marks off. |
+| Diff | "file", "inline" or "split" in the pane's header. The wrap button folds long lines. |
+| Markdown | Opens rendered, with an outline of its headings. A changed file marks what came and went. "file" in the pane's header hides the marks. "code" shows the text. |
 | HTML | Opens rendered in the editor pane, with scripts running in a sandboxed frame. "run" sends it to the preview. |
 | SVG, pictures and video | Open as a preview. A picture can go full size. |
 | Terminal | <kbd>⌘J</kbd>. <kbd>⌘F</kbd> finds in it. <kbd>⌃⇧&#96;</kbd> goes to the next tab. |
