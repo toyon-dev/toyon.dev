@@ -253,9 +253,9 @@ async function docs(render: (head: string, body: string, scheme: "dark") => stri
     const head = `  <title>${esc(title)}: Toyon</title>\n  <meta name="description" content="${esc(sentences(text, 120))}">`;
     const parent = names.includes(UNDER[name] ?? "") ? UNDER[name] : undefined;
     const above = parent ? titleOf(marked.lexer(await readFile(join(dir, `${parent}.md`), "utf8")), parent) : "Docs";
-    // the way up sits above the title, named for where it goes rather than "back": the index,
-    // or the doc this one is under
-    const up = `    <a class="up" href="/${DOCS}/${parent ?? ""}"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.5 3.5 5 8l4.5 4.5M5 8h8"/></svg>${esc(above)}</a>\n`;
+    // the way up stands left of the title, an arrow alone; a screen reader hears where it goes
+    // rather than "back": the index, or the doc this one is under
+    const up = `    <a class="up" href="/${DOCS}/${parent ?? ""}" aria-label="${esc(above)}"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.5 3.5 5 8l4.5 4.5M5 8h8"/></svg></a>\n`;
     const html = marked.parser(tokens);
     // ahead of the page in the source, so the keyboard reaches the contents before the text
     const body = `${outline()}  <main class="prose doc">\n${up}${html}  </main>\n${SCRIPT}`;
