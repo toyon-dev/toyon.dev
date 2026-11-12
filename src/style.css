@@ -678,8 +678,10 @@ section {
 /* A table is as wide as its rows want, past the measure and up to the column's right edge,
    where the nav ends. No further: a cell holds sentences, and past the column a line of them
    runs much longer than a paragraph's, which the screenshot on the landing page never has to
-   be read as. On a narrow screen it scrolls sideways rather than pushing the page out. The
-   rules run between rows only, in the page's rule colour. */
+   be read as. On a narrow screen it scrolls sideways rather than pushing the page out. It has
+   one rule, under the column names, in the page's rule colour. A row is told from the next by
+   the space between them: a rule under every row and a line under every link in it are more
+   lines than the words can carry. */
 .prose table {
   display: block;
   width: max-content;
@@ -693,10 +695,9 @@ section {
 
 .prose th,
 .prose td {
-  padding: 0.7rem 1rem 0.7rem 0;
+  padding: 0.55rem 1rem 0.55rem 0;
   text-align: left;
   vertical-align: top;
-  border-top: 1px solid var(--rule);
 }
 
 /* Where there is room, the columns stand further apart, and the first, the names the reader
@@ -716,7 +717,13 @@ section {
 .prose th {
   font-weight: 500;
   color: var(--ink);
-  border-top: 0;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+/* the rule gets a little more room on both sides than one row has from the next */
+.prose thead + tbody tr:first-child td {
+  padding-top: 0.85rem;
 }
 
 .prose th:last-child,

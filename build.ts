@@ -114,6 +114,14 @@ const marked = new Marked({
       const name = tokens.length === 1 && tokens[0].type === "codespan" ? ' class="name"' : "";
       return `<h${depth} id="${id}"${name}>${inner}<a class="anchor" href="#${id}" aria-label="Link to this section">${LINK}</a></h${depth}>\n`;
     },
+    // Markdown has no table without a header row, so a doc whose columns need no names (the
+    // section's heading says what the rows are) leaves the cells empty, and the row is dropped
+    // here rather than drawn as a blank line over a rule.
+    table({ header, rows }) {
+      if (header.some((cell) => cell.text.trim())) return false;
+      const body = rows.map((row) => this.tablerow({ text: row.map((cell) => this.tablecell(cell)).join("") })).join("");
+      return `<table>\n<tbody>${body}</tbody></table>\n`;
+    },
   },
 });
 // A doc's outline, the one the app draws beside a document (shell ui/Document.tsx): a strip of
